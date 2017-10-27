@@ -111,6 +111,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommandLineUI.cpp" />
+    <ClCompile Include="currency.cpp" />
+    <ClCompile Include="CurrencyDollar.cpp" />
+    <ClCompile Include="CurrencyEuro.cpp" />
+    <ClCompile Include="CurrencyRupee.cpp" />
+    <ClCompile Include="CurrencyYen.cpp" />
+    <ClCompile Include="CurrencyYuan.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CommandLineUI.h" />
+    <ClInclude Include="currency.h" />
+    <ClInclude Include="CurrencyDollar.h" />
+    <ClInclude Include="CurrencyEuro.h" />
+    <ClInclude Include="CurrencyRupee.h" />
+    <ClInclude Include="CurrencyYen.h" />
+    <ClInclude Include="CurrencyYuan.h" />
+    <ClInclude Include="List.h" />
+    <ClInclude Include="Node.h" />
+    <ClInclude Include="Queue.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
