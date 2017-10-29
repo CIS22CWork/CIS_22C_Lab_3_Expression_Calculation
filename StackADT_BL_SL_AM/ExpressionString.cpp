@@ -10,7 +10,7 @@ IF LIBRARYS ARE NOT FOUND, THEN SWITCH SDK VERSION
 OR INSTALL THIS SDK VERSION
 
 ExpressionString
-Infix to Postfix conversion in C++ using stack. 
+Infix to Postfix conversion in C++ using stack.
 We are assuming that both operators and operands in input will be single character.
 */
 #include "ExpressionString.h"
@@ -20,14 +20,14 @@ using namespace std;
 //******************************************************
 // class constructor (no argument version)      
 //******************************************************
-ExpressionString::ExpressionString (void){}
+ExpressionString::ExpressionString (void) {}
 
 //******************************************************
 // class constructor    
 //******************************************************
 ExpressionString::ExpressionString (string expression)
 {
-	
+
 }
 
 //******************************************************
@@ -35,64 +35,97 @@ ExpressionString::ExpressionString (string expression)
 //******************************************************
 ExpressionString::~ExpressionString ()
 {
-	
+
 }
 
 //******************************************************
 // InfixToPostfix       
 //
 // Function to evaluate Postfix expression and return output
+// 
+// Math Operators :
+// + || Addition
+// - || Subtraction
+// * || Multiplication
+// / || Division
+// % || Modulus
+// ^ || Power
+// $ || Square Root
+// s || Sine
+// c || Cosine
+// t || Tangent
+// ~ || Negative Number
 //******************************************************
 string ExpressionString::InfixToPostfix (string expression)
 {
 	// Declaring a Stack from Standard template library in C++. 
-	Stack<char> S;
+	Stack<string> S;
 	string postfix = ""; // Initialize postfix as empty string.
-	for (int i = 0; i< expression.length (); i++)
+	string entity = "";
+	bool operand = false;
+	unsigned int i;
+	unsigned int n = (unsigned int)expression.length ();
+	for (i = 0; i < n; i++)
 	{
-
-		// Scanning each character from left. 
-		// If character is a delimitter, move on. 
+		// Instructions from http://csis.pace.edu/~wolf/CS122/infix-postfix.htm
+		// Scanning each character from left. If character is a delimitter, move on. 
 		if (expression[i] == ' ' || expression[i] == ',') continue;
-
-		// If character is operator, pop two elements from stack, perform operation and push the result back. 
-		else if (IsOperator (expression[i]))
+		// If this and next character are numbers or a '.' then combine them
+		isOperand (expression[i]) ? operand = true : operand = false;
+		if (i + 1 < n && isNumeric (expression[i]) && isNumeric (expression[i + 1]))
 		{
-			while (!S.empty () && S.top () != '(' && HasHigherPrecedence (S.top (), expression[i]))
+			entity += expression[i];
+			continue;
+		}
+		if (entity == "") entity = expression[i];
+		// Print operands as they arrive.
+		if (operand) postfix += entity + " ";
+		// 	If the stack is empty or contains a left parenthesis on top, push the incoming operator onto the stack.
+		else if (S.empty () || S.top () == "(") S.push (entity);
+		// 	If the incoming symbol is a left parenthesis, push it on the stack.
+		else if (entity == "(") S.push (entity);
+		// 	If the incoming symbol is a right parenthesis, pop the stack and print the operators until you see a left parenthesis. Discard the pair of parentheses.
+		else if (entity == ")")
+		{
+			while (!S.empty () && S.top () != "(")
 			{
-				postfix += S.top ();
-				S.pop ();
-			}
-			S.push (expression[i]);
-		}
-		// Else if character is an operand
-		else if (IsOperand (expression[i]))
-		{
-			postfix += expression[i];
-		}
-
-		else if (expression[i] == '(')
-		{
-			S.push (expression[i]);
-		}
-
-		else if (expression[i] == ')')
-		{
-			while (!S.empty () && S.top () != '(')
-			{
-				postfix += S.top ();
+				postfix += S.top () + " ";
 				S.pop ();
 			}
 			S.pop ();
 		}
-		/*for (Stack<char> dump = S; !dump.empty (); dump.pop ())
-			std::cout << dump.top ();
-		cout << endl;*/
+		// If the incoming symbol has higher precedence than the top of the stack, push it on the stack.
+		else if (!S.empty () && operatorWeight (S.top ()) < operatorWeight (entity)) S.push (entity);
+		// If the incoming symbol has equal precedence with the top of the stack, use association. 
+		// If the association is left to right, pop and print the top of the stack and then push the incoming operator. 
+		// If the association is right to left, push the incoming operator.
+		else if (!S.empty () && operatorWeight (S.top ()) == operatorWeight (entity))
+		{
+			postfix += S.top () + " ";
+			S.pop ();
+			S.push (entity);
+		}
+		// If the incoming symbol has lower precedence than the symbol on the top of the stack, 
+		// pop the stack and print the top operator. 
+		// Then test the incoming operator against the new top of stack.
+		else if (!S.empty () && operatorWeight (S.top ()) > operatorWeight (entity))
+		{
+			while (!S.empty () && operatorWeight (S.top ()) > operatorWeight (entity))
+			{
+				postfix += S.top () + " ";
+				S.pop ();
+			}
+			S.push (entity);
+		}
+		// test results
+		cout << entity << " " << &S << endl;
+		entity = "";
 	}
-
+	// At the end of the expression, pop and print all operators on the stack. 
+	// (No parentheses should remain.)
 	while (!S.empty ())
 	{
-		postfix += S.top ();
+		postfix += S.top () + " ";
 		S.pop ();
 	}
 
@@ -105,7 +138,7 @@ string ExpressionString::InfixToPostfix (string expression)
 // Function to verify whether a character is english letter or numeric digit. 
 // We are assuming in this solution that operand will be a single character
 //******************************************************
-bool ExpressionString::IsOperand (char C)
+bool ExpressionString::isOperand (char C)
 {
 	if (C >= '0' && C <= '9') return true;
 	if (C >= 'a' && C <= 'z') return true;
@@ -114,11 +147,23 @@ bool ExpressionString::IsOperand (char C)
 }
 
 //******************************************************
+// ExpressionString::IsNumeric      
+//
+// returns true if character is numeric and false if not
+//******************************************************
+bool ExpressionString::isNumeric (char C)
+{
+	if (C >= '0' && C <= '9') return true;
+	if (C == '.') return true;
+	return false;
+}
+
+//******************************************************
 // ExpressionString::IsOperand      
 //
 // Function to verify whether a character is operator symbol or not. 
 //******************************************************
-bool ExpressionString::IsOperator (char C)
+bool ExpressionString::isOperator (char C)
 {
 	if (C == '+' || C == '-' || C == '*' || C == '/' || C == '$')
 		return true;
@@ -127,64 +172,16 @@ bool ExpressionString::IsOperator (char C)
 }
 
 //******************************************************
-// ExpressionString::IsRightAssociative      
-//
-// Function to verify whether an operator is right associative or not. 
-//******************************************************
-int ExpressionString::IsRightAssociative (char op)
-{
-	if (op == '$') return true;
-	return false;
-}
-
-//******************************************************
 // ExpressionString::GetOperatorWeight     
 //
-// Function to get weight of an operator. An operator with higher weight will have higher precedence. 
+// returns the precedence "weight" for an operator 
 //******************************************************
-int ExpressionString::GetOperatorWeight (char op)
+int ExpressionString::operatorWeight (string op)
 {
 	int weight = -1;
-	switch (op)
-	{
-	case '+':
-	case '-':
-		weight = 1;
-	case '*':
-	case '/':
-		weight = 2;
-	case '$':
-		weight = 3;
-	}
+	if (op == "+") weight = 1;
+	else if (op == "-") weight = 1;
+	else if (op == "*") weight = 2;
+	else if (op == "/") weight = 2;
 	return weight;
-}
-
-//******************************************************
-// ExpressionString::GetOperatorWeight     
-//
-// Function to perform an operation and return output. 
-//******************************************************
-int ExpressionString::HasHigherPrecedence (char op1, char op2)
-{
-	int op1Weight = GetOperatorWeight (op1);
-	int op2Weight = GetOperatorWeight (op2);
-
-	// If operators have equal precedence, return true if they are left associative. 
-	// return false, if right associative. 
-	// if operator is left-associative, left one should be given priority. 
-	if (op1Weight == op2Weight)
-	{
-		if (IsRightAssociative (op1)) return false;
-		else return true;
-	}
-	return op1Weight > op2Weight ? true : false;
-}
-
-//******************************************************
-// operator<<        
-//******************************************************
-std::ostream& operator<< (std::ostream &foo, ExpressionString *ObjPtr)
-{
-	foo << "hey";
-	return foo;
 }

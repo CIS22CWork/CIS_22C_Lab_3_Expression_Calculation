@@ -22,17 +22,18 @@ We are assuming that both operators and operands in input will be single charact
 
 class ExpressionString
 {
+private:
+	bool leftAssociative;
 public:
 	ExpressionString ();
 	ExpressionString (std::string expression);
 	~ExpressionString ();
 
 	std::string InfixToPostfix (std::string expression);
-	bool IsOperand (char C);
-	bool IsOperator (char C);
-	int IsRightAssociative (char op);
-	int GetOperatorWeight (char op);
-	int HasHigherPrecedence (char op1, char op2);
+	bool isOperand (char C);
+	bool isNumeric (char C);
+	bool isOperator (char C);
+	int operatorWeight (std::string op);
 
 	//******************************************************
 	// operator<<        

@@ -17,6 +17,7 @@ KEEP ALL COUT<< AND CIN>> HERE
 #include <time.h>       /* time */
 
 #include "commandLineUI.h"
+#include "ExpressionString.h"
 #include "List.h"
 
 using namespace std;
@@ -206,9 +207,15 @@ std::ostream& operator<< (std::ostream &foo, Stack<T> *ListPtr)
 		while (currPtr != nullptr)
 		{
 			itemCount++;
-			foo << itemCount << ". " << currPtr->value << endl;
+			//foo << itemCount << ". " << currPtr->value << endl;
+			foo << currPtr->value;
 			currPtr = currPtr->next;
 		}
 	}
+	return foo;
+}
+std::ostream& operator<< (std::ostream &foo, ExpressionString *ObjPtr)
+{
+	foo << "hey";
 	return foo;
 }

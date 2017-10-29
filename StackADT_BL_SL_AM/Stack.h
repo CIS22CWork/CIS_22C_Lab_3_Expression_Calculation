@@ -25,6 +25,9 @@ public:
 	//******************************************************
 	Stack () { List (); }
 	//******************************************************
+	// Copy Constructor argument can't be template
+	//******************************************************
+	//******************************************************
 	// Destructor          
 	//******************************************************
 	~Stack () { clear (); }
@@ -44,10 +47,7 @@ public:
 	//
 	// inserts element at the top     
 	//******************************************************
-	bool push (T newEntry)
-	{
-		return push_back (newEntry);
-	}
+	bool push (T newEntry) { return push_back (newEntry); }
 
 	//******************************************************
 	// empty        
@@ -76,10 +76,16 @@ public:
 	//
 	// accesses the top element     
 	//******************************************************
-	T top ()
-	{
-		return getValue (size () - 1);
-	}
+	T top () { return getValue (size () - 1); }
+
+	//******************************************************
+	// copy        
+	//
+	// pushes the target stack object elements to this stack
+	// call clear() if you want an exact copy
+	// this method wont make a copy if the element is an object   
+	//******************************************************
+	void copy (Stack<T> *target) { List::copy (target); }
 	//******************************************************
 	// operator<<        
 	//******************************************************

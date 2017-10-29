@@ -32,6 +32,23 @@ private:
 	unsigned int itemCount;
 public:
 	//******************************************************
+	// Default Constructor        
+	//******************************************************
+	List ()
+	{
+		head = nullptr;
+		tail = nullptr;
+		itemCount = 0;
+	}
+	//******************************************************
+	// Destructor          
+	//******************************************************
+	virtual ~List () { clear (); }
+	//******************************************************
+	// Copy Constructor        
+	//******************************************************
+
+	//******************************************************
 	// empty        
 	//
 	// Returns whether the list container is empty
@@ -170,9 +187,9 @@ public:
 	// Removes the first element of the container.
 	// return: true on success, false on fail
 	//******************************************************
-	bool pop_back()
+	bool pop_back ()
 	{
-		bool returnStatus = erase (itemCount-1);
+		bool returnStatus = erase (itemCount - 1);
 		return returnStatus;
 	}
 
@@ -294,28 +311,20 @@ public:
 	//
 	// returns the value of the list node index.
 	//******************************************************
-	T getValue (unsigned int indexGet)
+	T getValue (unsigned int position)
 	{
 		Node<T> *currentNode;
 		T returnValue;
 
+		unsigned int i;
 		currentNode = tail;
 
-		if (indexGet >= 0 && indexGet < itemCount)
+		if (position >= 0 && position < itemCount)
 		{
-			// loop starts from tail and moves towards head.
-			for (unsigned int i = 0; i <= indexGet; i++)
+			for (i = 0; i <= position; i++)
 			{
-				// found the index. lets get it.
-				if (i == indexGet)
-				{
-					returnValue = currentNode->value;
-				}
-				// next
-				if (i < itemCount - 1)
-				{
-					currentNode = currentNode->next;
-				}
+				if (i == position) returnValue = currentNode->value;
+				else currentNode = currentNode->next;
 			}
 		}
 		return returnValue;
@@ -332,18 +341,17 @@ public:
 	}
 
 	//******************************************************
-	// Default Constructor        
+	// copy       
+	//
+	// pushes the target list object elements to this list
+	// call clear() if you want an exact copy
+	// this method wont make a copy if the element is an object
 	//******************************************************
-	List ()
+	void copy (List<T> *target)
 	{
-		head = nullptr;
-		tail = nullptr;
-		itemCount = 0;
+		unsigned int n = target->size ();
+		for (unsigned int i = 0; i < n; i++) push_back (target->getValue (i));
 	}
-	//******************************************************
-	// Destructor          
-	//******************************************************
-	virtual ~List () { clear (); }
 
 	//******************************************************
 	// operator<<        
