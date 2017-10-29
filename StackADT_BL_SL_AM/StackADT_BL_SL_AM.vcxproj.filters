@@ -15,60 +15,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CurrencyEuro.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CurrencyRupee.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CurrencyYen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CurrencyYuan.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CommandLineUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="currency.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CurrencyDollar.cpp">
+    <ClCompile Include="ExpressionString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Queue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CommandLineUI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="currency.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CurrencyDollar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CurrencyEuro.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CurrencyRupee.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CurrencyYen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CurrencyYuan.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpressionString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,31 +1,26 @@
+#ifndef COMMAND_LINE_UI_H
+#define COMMAND_LINE_UI_H
+
 #include <sstream>
 #include <limits>
-#include "Currency.h"
-#include "CurrencyDollar.h"
-#include "CurrencyEuro.h"
-#include "CurrencyRupee.h"
-#include "CurrencyYen.h"
-#include "CurrencyYuan.h"
-#include "Queue.h"
+#include "Stack.h"
 
 class CommandLineUI
 {
 private:
-	Queue<int>* QueueInt;
-	Queue<std::string>* QueueString;
-	Queue<Currency>* QueueCurrency;
+	Stack<int>* StackInt;
+	Stack<std::string>* StackString;
 	int menuOption;
 	int currentMenu;
 public:
-	CommandLineUI (Queue<int> *QueueObjInt, Queue<std::string> *QueueObjString, Queue<Currency> *QueueObjCurrency);
+	CommandLineUI (Stack<int> *StackObjInt, Stack<std::string> *StackObjString);
 	void enterLoop ();
-	void intQueuePush ();
-	void intQueuePop ();
-	void intQueueClear ();
-	void stringQueuePush ();
-	void stringQueuePop ();
-	void stringQueueClear ();
-	void currencyQueuePush ();
-	void currencyQueuePop ();
-	void currencyQueueClear ();
+	void intStackPush ();
+	void intStackPop ();
+	void intStackClear ();
+	void stringStackPush ();
+	void stringStackPop ();
+	void stringStackClear ();
 };
+
+#endif

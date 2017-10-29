@@ -16,6 +16,7 @@ count of items in the list, empty the list, etc.
 #ifndef LIST_H
 #define LIST_H
 #include "Node.h"
+#include <iostream>
 
 /*
 To make an array have linked lists
@@ -28,7 +29,7 @@ class List
 private:
 	Node<T> *head;
 	Node<T> *tail;
-	int itemCount;
+	unsigned int itemCount;
 public:
 	//******************************************************
 	// empty        
@@ -91,7 +92,7 @@ public:
 		Node<T> *currentNode;
 		Node<T> *prevNode;
 		bool returnStatus = false;
-		unsigned int i = 0;
+		unsigned int i;
 
 		newNode = nullptr;
 		currentNode = tail;
@@ -183,54 +184,36 @@ public:
 	// list count decremented by 1 if successful.
 	// returns true if addition was successful, or false if not.    
 	//******************************************************
-	bool erase (int indexRemove)
+	bool erase (unsigned int position)
 	{
 		Node<T> *currentNode;
 		Node<T> *prevNode;
 		Node<T> *deletedNode;
 		bool returnStatus = false;
+		unsigned int i;
 
 		currentNode = tail;
 		prevNode = nullptr;
 		deletedNode = nullptr;
 
-		if (indexRemove >= 0 && indexRemove < itemCount)
+		if (position >= 0 && position < itemCount)
 		{
-			// loop starts from tail and moves towards head.
-			for (int i = 0; i <= indexRemove; i++)
+			for (i = 0; i <= position; i++)
 			{
-				// found the index. lets remove it
-				if (i == indexRemove)
+				if (i == position)
 				{
-					returnStatus = true;
 					deletedNode = currentNode;
-					if (i == 0)
-					{
-						// deleted the tail
-						if (itemCount > 0)
-						{
-							currentNode = currentNode->next;
-						}
-						tail = currentNode;
-					}
-					else if (i == itemCount - 1)
-					{
-						// deleted the head
-						prevNode->next = nullptr;
-						head = prevNode;
-					}
-					if (i > 0 && i < itemCount - 1)
-					{
-						// there is a previous and a next
-						prevNode->next = currentNode->next;
-					}
-					delete deletedNode;
+					if (i != 0 && i != itemCount) prevNode->next = currentNode->next;
+					if (i == 0 && i == itemCount) { head = nullptr; tail = nullptr; };
+					if (i == 0 && i != itemCount) tail = currentNode->next;
+					if (i != 0 && i == itemCount) head = prevNode->next;
+					currentNode->next = nullptr;
+					delete currentNode;
 					itemCount--;
 				}
-				// next
-				prevNode = currentNode;
-				if (i < itemCount - 1)
+				else
 				{
+					prevNode = currentNode;
 					currentNode = currentNode->next;
 				}
 			}
@@ -311,7 +294,7 @@ public:
 	//
 	// returns the value of the list node index.
 	//******************************************************
-	T getValue (int indexGet)
+	T getValue (unsigned int indexGet)
 	{
 		Node<T> *currentNode;
 		T returnValue;
@@ -321,7 +304,7 @@ public:
 		if (indexGet >= 0 && indexGet < itemCount)
 		{
 			// loop starts from tail and moves towards head.
-			for (int i = 0; i <= indexGet; i++)
+			for (unsigned int i = 0; i <= indexGet; i++)
 			{
 				// found the index. lets get it.
 				if (i == indexGet)

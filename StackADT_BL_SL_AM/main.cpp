@@ -6,9 +6,11 @@ Lab 2
 
 Used Microsoft Visual Studio 2017
 Windows SDK Version: 10.0.16299.0
+IF LIBRARYS ARE NOT FOUND, THEN SWITCH SDK VERSION
+OR INSTALL THIS SDK VERSION
 
 main
-inits different Queue classes and passes the UI for the demo
+inits different Stack classes and passes the UI for the demo
 */
 
 #include <iostream>
@@ -16,8 +18,8 @@ inits different Queue classes and passes the UI for the demo
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
-#include "Queue.h"
-#include "Currency.h"
+#include "Stack.h"
+#include "ExpressionString.h"
 #include "CommandLineUI.h"
 
 using namespace std;
@@ -26,11 +28,13 @@ int main ()
 {
 	/* initialize random seed: */
 	srand ((int)time (NULL));
-	Queue<int> QueueInt;
-	Queue<string> QueueString;
-	Queue<Currency> QueueCurrency;
-	CommandLineUI UI (&QueueInt, &QueueString, &QueueCurrency);
+	Stack<int> StackInt;
+	Stack<string> StackString;
+	ExpressionString ExpressionObj;
+	cout << ExpressionObj.InfixToPostfix("A*(B+C*D)+E") << endl;
+	CommandLineUI UI (&StackInt, &StackString);
 	// start the UI
+
 	UI.enterLoop ();
 
 	//comment out the next line before compiling final .exe and submitting to the teacher
