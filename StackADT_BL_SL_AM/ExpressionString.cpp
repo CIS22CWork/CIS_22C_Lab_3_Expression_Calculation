@@ -63,6 +63,7 @@ string ExpressionString::InfixToPostfix (string expression)
 	string postfix = ""; // Initialize postfix as empty string.
 	string entity = "";
 	bool operand = false;
+	bool operandContinue = false;
 	unsigned int i;
 	unsigned int j;
 	unsigned int n = (unsigned int)expression.length ();
@@ -78,9 +79,11 @@ string ExpressionString::InfixToPostfix (string expression)
 		isOperand (expression[i]) ? operand = true : operand = false;
 		if (i + 1 < n && isNumeric (expression[i]) && isNumeric (expression[i + 1]))
 		{
+			operandContinue = true;
 			entity += expression[i];
 			continue;
 		}
+		if(operandContinue) entity += expression[i];
 		if (entity == "") entity = expression[i];
 		// Print operands as they arrive.
 		if (operand) postfix += entity + " ";
@@ -128,6 +131,7 @@ string ExpressionString::InfixToPostfix (string expression)
 		// symbol clear and step increment
 		entity = "";
 		j++;
+		operandContinue = false;
 	}
 	// At the end of the expression, pop and print all operators on the stack. 
 	// (No parentheses should remain.)
@@ -172,7 +176,7 @@ bool ExpressionString::isNumeric (char C)
 //******************************************************
 bool ExpressionString::isOperator (char C)
 {
-	if (C == '+' || C == '-' || C == '*' || C == '/' || C == '$')
+	if (C == '+' || C == '-' || C == '*' || C == '/' || C == '$' || C == '%' || C == '^')
 		return true;
 
 	return false;
@@ -190,6 +194,9 @@ int ExpressionString::operatorWeight (string op)
 	else if (op == "-") weight = 1;
 	else if (op == "*") weight = 2;
 	else if (op == "/") weight = 2;
+	else if (op == "%") weight = 2;
+	else if (op == "$") weight = 3;
+	else if (op == "^") weight = 3;
 	return weight;
 }
 
@@ -219,10 +226,8 @@ std::ostream& operator<< (std::ostream &foo, List<T> *ListPtr)
 template <class T>
 std::ostream& operator<< (std::ostream &foo, Stack<T> *ListPtr)
 {
-	// Since operator<< is a friend of the List class, we can access
-	// it's members directly.
 	int itemCount = 0;
-	if (ListPtr->empty ()) cout << "List is empty" << endl;
+	if (ListPtr->empty ()) cout << "" << endl;
 	else
 	{
 		Node<T> *currPtr = ListPtr->getTail ();
