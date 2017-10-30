@@ -89,8 +89,8 @@ public:
 	//******************************************************
 	// operator<<        
 	//******************************************************
-	//template <class T>
-	//friend std::ostream& operator<< (std::ostream &foo, Stack<T> *ListPtr);
+	template <class T>
+	friend std::ostream& operator<< (std::ostream &foo, Stack<T> *ListPtr);
 };
 
 #endif

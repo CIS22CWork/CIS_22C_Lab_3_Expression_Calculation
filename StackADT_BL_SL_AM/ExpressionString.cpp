@@ -64,8 +64,12 @@ string ExpressionString::InfixToPostfix (string expression)
 	string entity = "";
 	bool operand = false;
 	unsigned int i;
+	unsigned int j;
 	unsigned int n = (unsigned int)expression.length ();
-	for (i = 0; i < n; i++)
+	// stack test output
+	stringstream stackoutput;
+	cout << setw (5) << left << "step" << setw (7) << "symbol" << setw (6) << "stack" << setw (8) << "postfix" << endl;
+	for (i = 0, j = 1; i < n; i++)
 	{
 		// Instructions from http://csis.pace.edu/~wolf/CS122/infix-postfix.htm
 		// Scanning each character from left. If character is a delimitter, move on. 
@@ -117,9 +121,13 @@ string ExpressionString::InfixToPostfix (string expression)
 			}
 			S.push (entity);
 		}
-		// test results
-		cout << entity << " " << &S << endl;
+		// stack test results
+		stackoutput << &S;
+		cout << setw (5) << left << j << setw (7) << entity << setw (6) << stackoutput.str() << postfix << endl;
+		stackoutput.str ("");
+		// symbol clear and step increment
 		entity = "";
+		j++;
 	}
 	// At the end of the expression, pop and print all operators on the stack. 
 	// (No parentheses should remain.)
@@ -128,7 +136,6 @@ string ExpressionString::InfixToPostfix (string expression)
 		postfix += S.top () + " ";
 		S.pop ();
 	}
-
 	return postfix;
 }
 
@@ -184,4 +191,48 @@ int ExpressionString::operatorWeight (string op)
 	else if (op == "*") weight = 2;
 	else if (op == "/") weight = 2;
 	return weight;
+}
+
+
+//******************************************************
+// operator<<        
+//******************************************************
+template <class T>
+std::ostream& operator<< (std::ostream &foo, List<T> *ListPtr)
+{
+	// Since operator<< is a friend of the List class, we can access
+	// it's members directly.
+	int itemCount = 0;
+	if (ListPtr->empty ()) cout << "List is empty" << endl;
+	else
+	{
+		Node<T> *currPtr = ListPtr->getTail ();
+		while (currPtr != nullptr)
+		{
+			itemCount++;
+			foo << itemCount << ". " << currPtr->value << endl;
+			currPtr = currPtr->next;
+		}
+	}
+	return foo;
+}
+template <class T>
+std::ostream& operator<< (std::ostream &foo, Stack<T> *ListPtr)
+{
+	// Since operator<< is a friend of the List class, we can access
+	// it's members directly.
+	int itemCount = 0;
+	if (ListPtr->empty ()) cout << "List is empty" << endl;
+	else
+	{
+		Node<T> *currPtr = ListPtr->getTail ();
+		while (currPtr != nullptr)
+		{
+			itemCount++;
+			//foo << itemCount << ". " << currPtr->value << endl;
+			foo << currPtr->value;
+			currPtr = currPtr->next;
+		}
+	}
+	return foo;
 }

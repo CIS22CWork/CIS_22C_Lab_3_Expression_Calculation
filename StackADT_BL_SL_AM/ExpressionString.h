@@ -19,6 +19,8 @@ We are assuming that both operators and operands in input will be single charact
 #include "Stack.h"
 #include <iostream>
 #include <string>
+#include <iomanip>
+#include <sstream>
 
 class ExpressionString
 {

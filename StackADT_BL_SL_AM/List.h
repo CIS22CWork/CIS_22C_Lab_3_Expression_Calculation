@@ -45,7 +45,7 @@ public:
 	//******************************************************
 	virtual ~List () { clear (); }
 	//******************************************************
-	// Copy Constructor        
+	// Copy Constructor (May not contain template argument)
 	//******************************************************
 
 	//******************************************************
@@ -140,6 +140,22 @@ public:
 		}
 		return returnStatus;
 	}
+
+	//******************************************************
+	// front       
+	//
+	// Returns a reference to the first element in the 
+	// list container.
+	//******************************************************
+	T front () { return getValue (0); }
+
+	//******************************************************
+	// back       
+	//
+	// Returns a reference to the last element in the 
+	// list container.
+	//******************************************************
+	T back () { return getValue (size () - 1); }
 
 	//******************************************************
 	// push_back             
@@ -356,7 +372,7 @@ public:
 	//******************************************************
 	// operator<<        
 	//******************************************************
-	//template <class T>
-	//friend std::ostream& operator<< (std::ostream &foo, List<T> *ListPtr);
+	template <class T>
+	friend std::ostream& operator<< (std::ostream &foo, List<T> *ListPtr);
 };
 #endif
