@@ -1,26 +1,20 @@
 #ifndef COMMAND_LINE_UI_H
 #define COMMAND_LINE_UI_H
 
+#include <iostream>
 #include <sstream>
 #include <limits>
 #include "Stack.h"
+#include "List.h"
+#include "ExpressionString.h"
 
 class CommandLineUI
 {
 private:
-	Stack<int>* StackInt;
-	Stack<std::string>* StackString;
-	int menuOption;
-	int currentMenu;
+	ExpressionString* ExpressionStringObj;
 public:
-	CommandLineUI (Stack<int> *StackObjInt, Stack<std::string> *StackObjString);
+	CommandLineUI (ExpressionString *StackObjInt);
 	void enterLoop ();
-	void intStackPush ();
-	void intStackPop ();
-	void intStackClear ();
-	void stringStackPush ();
-	void stringStackPop ();
-	void stringStackClear ();
 };
 
 #endif

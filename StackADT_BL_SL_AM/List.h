@@ -356,7 +356,7 @@ public:
 	//******************************************************
 	// operator<<        
 	//******************************************************
-	template <class T>
-	friend std::ostream& operator<< (std::ostream &foo, List<T> *ListPtr);
+	//template <class T>
+	//friend std::ostream& operator<< (std::ostream &foo, List<T> *ListPtr);
 };
 #endif

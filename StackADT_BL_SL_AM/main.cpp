@@ -26,15 +26,9 @@ using namespace std;
 
 int main ()
 {
-	/* initialize random seed: */
-	srand ((int)time (NULL));
-	Stack<int> StackInt;
-	Stack<string> StackString;
 	ExpressionString ExpressionObj;
-	cout << ExpressionObj.InfixToPostfix("A*(B+C*D)+E") << endl;
-	CommandLineUI UI (&StackInt, &StackString);
+	CommandLineUI UI (&ExpressionObj);
 	// start the UI
-
 	UI.enterLoop ();
 
 	//comment out the next line before compiling final .exe and submitting to the teacher

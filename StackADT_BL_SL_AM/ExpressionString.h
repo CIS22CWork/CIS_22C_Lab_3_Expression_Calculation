@@ -38,7 +38,7 @@ public:
 	//******************************************************
 	// operator<<        
 	//******************************************************
-	friend std::ostream& operator<< (std::ostream &foo, ExpressionString *ObjPtr);
+	//friend std::ostream& operator<< (std::ostream &foo, ExpressionString *ObjPtr);
 };
 
 #endif
