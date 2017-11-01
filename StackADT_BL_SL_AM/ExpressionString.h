@@ -22,23 +22,28 @@ We are assuming that both operators and operands in input will be single charact
 #include <string>
 #include <iomanip>
 #include <sstream>
+#include <math.h>       /* pow */
+#include <regex>
 
 class ExpressionString
 {
 private:
 	bool leftAssociative;
 	std::string expressionInfix;
-	std::string expressionPostfix;
 	std::string expressionPrefix;
 	std::string expressionEval;
+	Queue<std::string> expressionPostQ;
 public:
 	ExpressionString ();
 	ExpressionString (std::string expression);
 	~ExpressionString ();
 
 	void setExpression (std::string expression);
-	std::string InfixToPostfix (std::string expression);
-	bool isOperand (char C);
+	std::string getPostfix ();
+	std::string infixToPostfix ();
+	void evaluate ();
+	void operatorEval (Stack<std::string> *S, std::string operate);
+	bool isOperand (std::string str);
 	bool isNumeric (char C);
 	bool isOperator (char C);
 	int operatorWeight (std::string op);

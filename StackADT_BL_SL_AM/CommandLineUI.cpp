@@ -37,7 +37,12 @@ void CommandLineUI::enterLoop ()
 		cin.clear (); // clears failure state
 		getline (cin, equationString);
 		cout << endl;
-		cout << "Postfix: " << ExpressionStringObj->InfixToPostfix (equationString) << endl << endl;
+		ExpressionStringObj->setExpression (equationString);
+		ExpressionStringObj->infixToPostfix ();
+		cout << "Postfix: " << ExpressionStringObj->getPostfix () << endl;
+		cout << "Evaluation: ";
+		ExpressionStringObj->evaluate ();
+			cout << endl << endl;
 	}
 }
 

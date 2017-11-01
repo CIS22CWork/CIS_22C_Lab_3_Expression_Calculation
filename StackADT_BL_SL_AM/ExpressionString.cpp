@@ -15,17 +15,17 @@ We are assuming that both operators and operands in input will be single charact
 */
 #include "ExpressionString.h"
 
-using namespace std;
-
 //******************************************************
 // class constructor (no argument version)      
 //******************************************************
-ExpressionString::ExpressionString (void) {}
+ExpressionString::ExpressionString (void) {
+
+}
 
 //******************************************************
 // class constructor    
 //******************************************************
-ExpressionString::ExpressionString (string expression)
+ExpressionString::ExpressionString (std::string expression)
 {
 
 }
@@ -49,6 +49,18 @@ void ExpressionString::setExpression (std::string expression)
 }
 
 //******************************************************
+// ExpressionString::IsNumeric      
+//
+// returns true if character is numeric and false if not
+//******************************************************
+std::string ExpressionString::getPostfix ()
+{
+	std::stringstream queueOutput;
+	queueOutput << &expressionPostQ;
+	return queueOutput.str ();
+}
+
+//******************************************************
 // InfixToPostfix       
 //
 // Function to evaluate Postfix expression and return output
@@ -65,41 +77,40 @@ void ExpressionString::setExpression (std::string expression)
 // c || Cosine
 // t || Tangent
 // ~ || Negative Number
+//
+// TESTED WITH: 1000-(57*23/5*b-(69-9*(1))%2)
 //******************************************************
-string ExpressionString::InfixToPostfix (string expression)
+std::string ExpressionString::infixToPostfix ()
 {
-	// Declaring a Stack from Standard template library in C++. 
-	Stack<string> S;
-	string postfix = ""; // Initialize postfix as empty string.
-	string entity = "";
-	bool operand = false;
+	Stack<std::string> S;
+	std::string entity = "";
 	bool operatorFlag = false;
 	bool operandContinue = false;
 	bool pushed;
 	unsigned int i;
 	unsigned int j;
-	unsigned int n = (unsigned int)expression.length ();
+	unsigned int n = (unsigned int)expressionInfix.length ();
+	std::stringstream queueOutput;
+	std::stringstream stackOutput;
 	// stack test output
-	stringstream stackoutput;
-	std::cout << setw (5) << left << "step" << setw (7) << "symbol" << setw (8) << "stack" << setw (8) << "postfix" << endl;
+	std::cout << std::setw (5) << std::left << "step" << std::setw (7) << "symbol" << std::setw (8) << "stack" << std::setw (8) << "postfix" << std::endl;
 	for (i = 0, j = 1; i < n; i++)
 	{
 		// Instructions from http://csis.pace.edu/~wolf/CS122/infix-postfix.htm
 		// Scanning each character from left. If character is a delimitter, move on. 
-		if (expression[i] == ' ' || expression[i] == ',') continue;
+		if (expressionInfix[i] == ' ' || expressionInfix[i] == ',') continue;
 		// If this and next character are numbers or a '.' then combine them
-		isOperand (expression[i]) ? operand = true : operand = false;
-		isOperator(expression[i]) ? operatorFlag = true : operatorFlag = false;
-		if (i + 1 < n && isNumeric (expression[i]) && isNumeric (expression[i + 1]))
+		isOperator (expressionInfix[i]) ? operatorFlag = true : operatorFlag = false;
+		if (i + 1 < n && isNumeric (expressionInfix[i]) && isNumeric (expressionInfix[i + 1]))
 		{
 			operandContinue = true;
-			entity += expression[i];
+			entity += expressionInfix[i];
 			continue;
 		}
-		if (operandContinue) entity += expression[i];
-		if (entity == "") entity = expression[i];
+		if (operandContinue) entity += expressionInfix[i];
+		if (entity == "") entity = expressionInfix[i];
 		// Print operands as they arrive.
-		if (operand) postfix += entity + " ";
+		if (isOperand (entity)) expressionPostQ.push (entity);
 		// 	If the stack is empty or contains a left parenthesis on top, push the incoming operator onto the stack.
 		else if (operatorFlag && (S.empty () || S.top () == "(")) S.push (entity);
 		// 	If the incoming symbol is a left parenthesis, push it on the stack.
@@ -109,7 +120,7 @@ string ExpressionString::InfixToPostfix (string expression)
 		{
 			while (!S.empty () && S.top () != "(")
 			{
-				postfix += S.top () + " ";
+				expressionPostQ.push (S.top ());
 				S.pop ();
 			}
 			S.pop ();
@@ -132,7 +143,7 @@ string ExpressionString::InfixToPostfix (string expression)
 					// If the association is right to left, push the incoming operator.
 					else if (operatorWeight (S.top ()) == operatorWeight (entity))
 					{
-						postfix += S.top () + " ";
+						expressionPostQ.push (S.top ());
 						S.pop ();
 						S.push (entity);
 						pushed = true;
@@ -142,7 +153,7 @@ string ExpressionString::InfixToPostfix (string expression)
 					// Then test the incoming operator against the new top of stack.
 					else if (!S.empty () && operatorWeight (S.top ()) > operatorWeight (entity))
 					{
-						postfix += S.top () + " ";
+						expressionPostQ.push (S.top ());
 						S.pop ();
 					}
 				}
@@ -153,9 +164,12 @@ string ExpressionString::InfixToPostfix (string expression)
 			}
 		}
 		// stack test results
-		stackoutput << &S;
-		std::cout << setw (5) << left << j << setw (7) << entity << setw (8) << stackoutput.str () << postfix << endl;
-		stackoutput.str ("");
+		// keeps stream together for setw()
+		stackOutput << &S;
+		queueOutput << &expressionPostQ;
+		std::cout << std::setw (5) << std::left << j << std::setw (7) << entity << std::setw (8) << stackOutput.str () << queueOutput.str () << std::endl;
+		stackOutput.str ("");
+		queueOutput.str ("");
 		// symbol clear and step increment
 		entity = "";
 		j++;
@@ -165,23 +179,201 @@ string ExpressionString::InfixToPostfix (string expression)
 	// (No parentheses should remain.)
 	while (!S.empty ())
 	{
-		postfix += S.top () + " ";
+		expressionPostQ.push (S.top ());
 		S.pop ();
 	}
-	return postfix;
+	return getPostfix ();
 }
 
-//******************************************************
-// ExpressionString::IsOperand      
-//
-// Function to verify whether a character is english letter or numeric digit. 
-// We are assuming in this solution that operand will be a single character
-//******************************************************
-bool ExpressionString::isOperand (char C)
+/** evaluates the expression
+@pre expressionPostfix exists
+@post expressionEval is evaluated from expressionPostfix
+@param None
+@return evaluated expression */
+void ExpressionString::evaluate ()
 {
-	if (C >= '0' && C <= '9') return true;
-	if (C >= 'a' && C <= 'z') return true;
-	if (C >= 'A' && C <= 'Z') return true;
+	Stack<std::string> S;
+	unsigned int i;
+	unsigned int n = (unsigned int)expressionPostQ.size ();
+	for (i = 0; i < n; i++)
+	{
+		std::cout << "back: " << expressionPostQ.back () << std::endl;
+		std::cout << "stack: " << &S << std::endl;
+		if (isOperand (expressionPostQ.back ()))
+		{
+			// we saw an operand, push the digit onto stack
+			S.push (expressionPostQ.back ());
+			expressionPostQ.pop ();
+		}
+		else
+		{
+			// we saw an operator, pop off the top two operands from the
+			// stack and evalute them using the current operator
+			// push the value obtained after evaluating
+			// onto the stack
+			operatorEval (&S, expressionPostQ.back ());
+			expressionPostQ.pop ();
+		}
+	}
+	std::stringstream queueOutput;
+	queueOutput << &S;
+	std::cout << queueOutput.str ();
+}
+
+/** evaluates a two argument operator
+@pre Stack is not empty and has two elements on top
+@post Operands returned to the stack
+@param S operand stack
+@param operate operator
+@return None */
+void ExpressionString::operatorEval (Stack<std::string> *S, std::string operate)
+{
+	bool op1Numberic = false;
+	bool op2Numberic = false;
+	double op1 = 0;
+	double op2 = 0;
+	std::string op1Str = "";
+	std::string op2Str = "";
+	std::ostringstream strs;
+	if (!S->empty ())
+	{
+		op1Str = S->top ();
+		if (std::regex_match (op1Str, std::regex ("^[0-9.]*$")))
+		{
+			op1Numberic = true;
+			op1 = stod (op1Str);
+		}
+		S->pop ();
+		if (!S->empty ())
+		{
+			op2Str = S->top ();
+			if (std::regex_match (op2Str, std::regex ("^[0-9.]*$")))
+			{
+				op2Numberic = true;
+				op2 = stod (op2Str);
+			}
+			S->pop ();
+		}
+	}
+	if (operate == "*")
+	{
+		if (op1Numberic && op2Numberic)
+		{
+			// 5*6=30
+			strs << op2 * op1;
+			S->push (strs.str ());
+		}
+		else if (!op1Numberic && op2Numberic)
+		{
+			// a*6 = a 6
+			S->push (op1Str);
+			S->push (op2Str);
+		}
+		else if (op1Numberic && !op2Numberic)
+		{
+			// 5*b = b 5
+			S->push (op2Str);
+			S->push (op1Str);
+		}
+		else
+		{
+			// a*b = ab
+			S->push (op2Str + op1Str);
+		}
+	}
+	else if (operate == "/")
+	{
+		if (op1Numberic && op2Numberic)
+		{
+			// 5/6=0.8333
+			strs << (double)(op2 / op1);
+			S->push (strs.str ());
+		}
+		else if (!op1Numberic && op2Numberic)
+		{
+			// 6/a = 1/a 6
+			S->push ("(1/" + op1Str + ")");
+			S->push (strs.str ());
+		}
+		else if (op1Numberic && !op2Numberic)
+		{
+			// b/5 = b 1/5
+			S->push (op2Str);
+			strs << 1 / op1;
+			S->push (strs.str ());
+		}
+		else
+		{
+			// a/b = a/b
+			S->push (op2Str + "/" + op1Str);
+		}
+	}
+	else if (operate == "+")
+	{
+		if (op1Numberic && op2Numberic)
+		{
+			// 5+6=11
+			strs << op2 + op1;
+			S->push (strs.str ());
+		}
+		else
+		{
+			// a+b = (a+b)
+			S->push ("(" + op2Str + "+" + op1Str + ")");
+		}
+	}
+	else if (operate == "-")
+	{
+		if (op1Numberic && op2Numberic)
+		{
+			// 5-6=-1
+			strs << op2 - op1;
+			S->push (strs.str ());
+		}
+		else
+		{
+			// a-b = (a-b)
+			S->push ("(" + op2Str + "-" + op1Str + ")");
+		}
+	}
+	else if (operate == "%")
+	{
+		if (op1Numberic && op2Numberic)
+		{
+			// 5%6=5
+			strs << (int)op2 % (int)op1;
+			S->push (strs.str ());
+		}
+		else
+		{
+			// a%b = (a%b)
+			S->push ("(" + op2Str + "%" + op1Str + ")");
+		}
+	}
+	else if (operate == "^")
+	{
+		if (op1Numberic && op2Numberic)
+		{
+			// 5^6=15625
+			strs << pow (op2, op1);
+			S->push (strs.str ());
+		}
+		else
+		{
+			// a^b = (a^b)
+			S->push ("(" + op2Str + "^" + op1Str + ")");
+		}
+	}
+}
+
+/** verify whether a character is english letter or numeric digit.
+@pre None.
+@post None.
+@param str The string to check
+@return True if numeric, or false if not */
+bool ExpressionString::isOperand (std::string str)
+{
+	if (std::regex_match (str, std::regex ("^[a-zA-Z0-9_]*$"))) return true;
 	return false;
 }
 
@@ -197,7 +389,7 @@ bool ExpressionString::isNumeric (char C)
 	return false;
 }
 
-/** verify whether a character is operator symbol or not. 
+/** verify whether a character is operator symbol or not.
 @pre None.
 @post None.
 @param C The character to check
@@ -210,13 +402,13 @@ bool ExpressionString::isOperator (char C)
 	return false;
 }
 
-/** returns the precedence "weight" for an operator 
+/** returns the precedence "weight" for an operator
 @pre None.
 @post None.
 @param op The operator to weigh
 @return Weight of the operator and -1 if not found */
 
-int ExpressionString::operatorWeight (string op)
+int ExpressionString::operatorWeight (std::string op)
 {
 	int weight = -1;
 	if (op == "+") weight = 1;
@@ -239,7 +431,7 @@ std::ostream& operator<< (std::ostream &foo, List<T> *ListPtr)
 	// Since operator<< is a friend of the List class, we can access
 	// it's members directly.
 	int itemCount = 0;
-	if (ListPtr->empty ()) cout << "List is empty" << endl;
+	if (ListPtr->empty ()) foo << "List is empty" << endl;
 	else
 	{
 		Node<T> *currPtr = ListPtr->getTail ();
@@ -256,7 +448,7 @@ template <class T>
 std::ostream& operator<< (std::ostream &foo, Stack<T> *ListPtr)
 {
 	int itemCount = 0;
-	if (ListPtr->empty ()) cout << "" << endl;
+	if (ListPtr->empty ()) foo << "";
 	else
 	{
 		Node<T> *currPtr = ListPtr->getTail ();
@@ -274,7 +466,7 @@ template <class T>
 std::ostream& operator<< (std::ostream &foo, Queue<T> *ListPtr)
 {
 	int itemCount = 0;
-	if (ListPtr->empty ()) cout << "" << endl;
+	if (ListPtr->empty ()) foo << "";
 	else
 	{
 		Node<T> *currPtr = ListPtr->getTail ();
@@ -282,7 +474,7 @@ std::ostream& operator<< (std::ostream &foo, Queue<T> *ListPtr)
 		{
 			itemCount++;
 			//foo << itemCount << ". " << currPtr->value << endl;
-			foo << currPtr->value;
+			foo << currPtr->value << " ";
 			currPtr = currPtr->next;
 		}
 	}

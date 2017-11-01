@@ -15,8 +15,6 @@ inits different Stack classes and passes the UI for the demo
 
 #include <iostream>
 #include <string>
-#include <stdlib.h>     /* srand, rand */
-#include <time.h>       /* time */
 
 #include "Stack.h"
 #include "Queue.h"
