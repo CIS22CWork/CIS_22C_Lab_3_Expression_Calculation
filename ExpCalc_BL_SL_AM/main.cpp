@@ -26,7 +26,7 @@ using namespace std;
 int main ()
 {
 	ExpressionString ExpressionObj;
-	ExpressionObj.setDebug (true);
+	ExpressionObj.setDebug (false);
 	CommandLineUI UI (&ExpressionObj);
 	// start the UI
 	UI.enterLoop ();
