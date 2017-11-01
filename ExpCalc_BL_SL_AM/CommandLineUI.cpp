@@ -38,11 +38,20 @@ void CommandLineUI::enterLoop ()
 		getline (cin, equationString);
 		cout << endl;
 		ExpressionStringObj->setExpression (equationString);
-		ExpressionStringObj->infixToPostfix ();
-		cout << "Postfix: " << ExpressionStringObj->getPostfix () << endl;
-		cout << "Evaluation: ";
-		ExpressionStringObj->evaluate ();
-			cout << endl << endl;
+		if (ExpressionStringObj->validate () == "")
+		{
+			ExpressionStringObj->parse ();
+			ExpressionStringObj->infixToPostfix ();
+			cout << "Postfix: " << ExpressionStringObj->getPostfix () << endl;
+			ExpressionStringObj->infixToPrefix ();
+			cout << "Prefix: " << ExpressionStringObj->getPrefix () << endl;
+			ExpressionStringObj->evaluate ();
+			cout << "Evaluation: " << ExpressionStringObj->getEval () << endl << endl;
+		}
+		else
+		{
+			cout << "Error: " << ExpressionStringObj->validate () << endl << endl;
+		}
 	}
 }
 

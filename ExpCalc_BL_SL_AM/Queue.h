@@ -29,6 +29,7 @@ public:
 	void clear ();
 	T front ();
 	T back ();
+	void copy (Queue<T> *target);
 
 	template <class T>
 	friend std::ostream& operator<< (std::ostream &foo, Queue<T> *ListPtr);
@@ -107,4 +108,13 @@ T Queue<T>::front () { return List::getValue (List::size () - 1); }
 //******************************************************
 template <class T>
 T Queue<T>::back () { return List::getValue (0); }
+
+/** pushes the target stack object elements to this stack
+not a true copy. this method wont make a copy if the element is an object
+@pre None
+@post Queue has target's elements pushed on
+@param target Queue to copy from
+@return None */
+template <class T>
+void Queue<T>::copy (Queue<T> *target) { List::copy (target); }
 #endif

@@ -28,24 +28,31 @@ We are assuming that both operators and operands in input will be single charact
 class ExpressionString
 {
 private:
-	bool leftAssociative;
+	bool debugMode;
 	std::string expressionInfix;
-	std::string expressionPrefix;
-	std::string expressionEval;
+	double expressionEval;
+	Queue<std::string> expressionInfixQ;
 	Queue<std::string> expressionPostQ;
+	Queue<std::string> expressionPreQ;
 public:
 	ExpressionString ();
 	ExpressionString (std::string expression);
 	~ExpressionString ();
 
 	void setExpression (std::string expression);
+	void setDebug (bool flag);
 	std::string getPostfix ();
+	std::string getPrefix ();
+	double getEval ();
 	std::string infixToPostfix ();
+	std::string infixToPrefix ();
+	void parse ();
 	void evaluate ();
-	void operatorEval (Stack<std::string> *S, std::string operate);
+	double operatorEval (double op1, double op2, std::string operate);
+	std::string validate ();
 	bool isOperand (std::string str);
 	bool isNumeric (char C);
-	bool isOperator (char C);
+	bool isOperator (std::string str);
 	int operatorWeight (std::string op);
 
 	template <class T>
