@@ -26,11 +26,16 @@ class ExpressionString
 {
 private:
 	bool leftAssociative;
+	std::string expressionInfix;
+	std::string expressionPostfix;
+	std::string expressionPrefix;
+	std::string expressionEval;
 public:
 	ExpressionString ();
 	ExpressionString (std::string expression);
 	~ExpressionString ();
 
+	void setExpression (std::string expression);
 	std::string InfixToPostfix (std::string expression);
 	bool isOperand (char C);
 	bool isNumeric (char C);

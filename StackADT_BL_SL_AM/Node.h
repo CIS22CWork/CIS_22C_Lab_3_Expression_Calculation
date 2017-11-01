@@ -23,21 +23,26 @@ public:
 	T value;
 	Node<T> *next;
 
-	//******************************************************
-	// Default Constructor        
-	//******************************************************
-	Node (T nodeValue)
-	{
-		value = nodeValue;
-		next = nullptr;
-	}
-
-	//******************************************************
-	// Destructor          
-	//******************************************************
-	~Node ()
-	{
-		next = nullptr;
-	}
+	Node (T nodeValue);
+	~Node ();
 };
+
+//******************************************************
+// Default Constructor        
+//******************************************************
+template <class T>
+Node<T>::Node (T nodeValue)
+{
+	value = nodeValue;
+	next = nullptr;
+}
+
+//******************************************************
+// Destructor          
+//******************************************************
+template <class T>
+Node<T>::~Node ()
+{
+	next = nullptr;
+}
 #endif

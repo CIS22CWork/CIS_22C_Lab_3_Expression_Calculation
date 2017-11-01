@@ -39,6 +39,16 @@ ExpressionString::~ExpressionString ()
 }
 
 //******************************************************
+// ExpressionString::IsNumeric      
+//
+// returns true if character is numeric and false if not
+//******************************************************
+void ExpressionString::setExpression (std::string expression)
+{
+	expressionInfix = expression;
+}
+
+//******************************************************
 // InfixToPostfix       
 //
 // Function to evaluate Postfix expression and return output
@@ -63,13 +73,15 @@ string ExpressionString::InfixToPostfix (string expression)
 	string postfix = ""; // Initialize postfix as empty string.
 	string entity = "";
 	bool operand = false;
+	bool operatorFlag = false;
 	bool operandContinue = false;
+	bool pushed;
 	unsigned int i;
 	unsigned int j;
 	unsigned int n = (unsigned int)expression.length ();
 	// stack test output
 	stringstream stackoutput;
-	cout << setw (5) << left << "step" << setw (7) << "symbol" << setw (6) << "stack" << setw (8) << "postfix" << endl;
+	std::cout << setw (5) << left << "step" << setw (7) << "symbol" << setw (8) << "stack" << setw (8) << "postfix" << endl;
 	for (i = 0, j = 1; i < n; i++)
 	{
 		// Instructions from http://csis.pace.edu/~wolf/CS122/infix-postfix.htm
@@ -77,18 +89,19 @@ string ExpressionString::InfixToPostfix (string expression)
 		if (expression[i] == ' ' || expression[i] == ',') continue;
 		// If this and next character are numbers or a '.' then combine them
 		isOperand (expression[i]) ? operand = true : operand = false;
+		isOperator(expression[i]) ? operatorFlag = true : operatorFlag = false;
 		if (i + 1 < n && isNumeric (expression[i]) && isNumeric (expression[i + 1]))
 		{
 			operandContinue = true;
 			entity += expression[i];
 			continue;
 		}
-		if(operandContinue) entity += expression[i];
+		if (operandContinue) entity += expression[i];
 		if (entity == "") entity = expression[i];
 		// Print operands as they arrive.
 		if (operand) postfix += entity + " ";
 		// 	If the stack is empty or contains a left parenthesis on top, push the incoming operator onto the stack.
-		else if (S.empty () || S.top () == "(") S.push (entity);
+		else if (operatorFlag && (S.empty () || S.top () == "(")) S.push (entity);
 		// 	If the incoming symbol is a left parenthesis, push it on the stack.
 		else if (entity == "(") S.push (entity);
 		// 	If the incoming symbol is a right parenthesis, pop the stack and print the operators until you see a left parenthesis. Discard the pair of parentheses.
@@ -101,32 +114,47 @@ string ExpressionString::InfixToPostfix (string expression)
 			}
 			S.pop ();
 		}
-		// If the incoming symbol has higher precedence than the top of the stack, push it on the stack.
-		else if (!S.empty () && operatorWeight (S.top ()) < operatorWeight (entity)) S.push (entity);
-		// If the incoming symbol has equal precedence with the top of the stack, use association. 
-		// If the association is left to right, pop and print the top of the stack and then push the incoming operator. 
-		// If the association is right to left, push the incoming operator.
-		else if (!S.empty () && operatorWeight (S.top ()) == operatorWeight (entity))
+		else
 		{
-			postfix += S.top () + " ";
-			S.pop ();
-			S.push (entity);
-		}
-		// If the incoming symbol has lower precedence than the symbol on the top of the stack, 
-		// pop the stack and print the top operator. 
-		// Then test the incoming operator against the new top of stack.
-		else if (!S.empty () && operatorWeight (S.top ()) > operatorWeight (entity))
-		{
-			while (!S.empty () && operatorWeight (S.top ()) > operatorWeight (entity))
+			pushed = false;
+			if (!S.empty ())
 			{
-				postfix += S.top () + " ";
-				S.pop ();
+				while (!pushed)
+				{
+					// If the incoming symbol has higher precedence than the top of the stack, push it on the stack.
+					if (operatorWeight (S.top ()) < operatorWeight (entity))
+					{
+						S.push (entity);
+						pushed = true;
+					}
+					// If the incoming symbol has equal precedence with the top of the stack, use association. 
+					// If the association is left to right, pop and print the top of the stack and then push the incoming operator. 
+					// If the association is right to left, push the incoming operator.
+					else if (operatorWeight (S.top ()) == operatorWeight (entity))
+					{
+						postfix += S.top () + " ";
+						S.pop ();
+						S.push (entity);
+						pushed = true;
+					}
+					// If the incoming symbol has lower precedence than the symbol on the top of the stack, 
+					// pop the stack and print the top operator. 
+					// Then test the incoming operator against the new top of stack.
+					else if (!S.empty () && operatorWeight (S.top ()) > operatorWeight (entity))
+					{
+						postfix += S.top () + " ";
+						S.pop ();
+					}
+				}
 			}
-			S.push (entity);
+			else
+			{
+				S.push (entity);
+			}
 		}
 		// stack test results
 		stackoutput << &S;
-		cout << setw (5) << left << j << setw (7) << entity << setw (6) << stackoutput.str() << postfix << endl;
+		std::cout << setw (5) << left << j << setw (7) << entity << setw (8) << stackoutput.str () << postfix << endl;
 		stackoutput.str ("");
 		// symbol clear and step increment
 		entity = "";
