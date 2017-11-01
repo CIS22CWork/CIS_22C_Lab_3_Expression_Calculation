@@ -5,6 +5,7 @@
 #include <sstream>
 #include <limits>
 #include "Stack.h"
+#include "Queue.h"
 #include "List.h"
 #include "ExpressionString.h"
 

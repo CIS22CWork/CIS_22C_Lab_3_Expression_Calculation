@@ -185,11 +185,11 @@ bool ExpressionString::isOperand (char C)
 	return false;
 }
 
-//******************************************************
-// ExpressionString::IsNumeric      
-//
-// returns true if character is numeric and false if not
-//******************************************************
+/** verify whether a character is numeric or not.
+@pre None.
+@post None.
+@param C The character to check
+@return True if numeric, or false if not */
 bool ExpressionString::isNumeric (char C)
 {
 	if (C >= '0' && C <= '9') return true;
@@ -197,11 +197,11 @@ bool ExpressionString::isNumeric (char C)
 	return false;
 }
 
-//******************************************************
-// ExpressionString::IsOperand      
-//
-// Function to verify whether a character is operator symbol or not. 
-//******************************************************
+/** verify whether a character is operator symbol or not. 
+@pre None.
+@post None.
+@param C The character to check
+@return True if operator, or false if not */
 bool ExpressionString::isOperator (char C)
 {
 	if (C == '+' || C == '-' || C == '*' || C == '/' || C == '$' || C == '%' || C == '^')
@@ -210,11 +210,12 @@ bool ExpressionString::isOperator (char C)
 	return false;
 }
 
-//******************************************************
-// ExpressionString::GetOperatorWeight     
-//
-// returns the precedence "weight" for an operator 
-//******************************************************
+/** returns the precedence "weight" for an operator 
+@pre None.
+@post None.
+@param op The operator to weigh
+@return Weight of the operator and -1 if not found */
+
 int ExpressionString::operatorWeight (string op)
 {
 	int weight = -1;
@@ -253,6 +254,24 @@ std::ostream& operator<< (std::ostream &foo, List<T> *ListPtr)
 }
 template <class T>
 std::ostream& operator<< (std::ostream &foo, Stack<T> *ListPtr)
+{
+	int itemCount = 0;
+	if (ListPtr->empty ()) cout << "" << endl;
+	else
+	{
+		Node<T> *currPtr = ListPtr->getTail ();
+		while (currPtr != nullptr)
+		{
+			itemCount++;
+			//foo << itemCount << ". " << currPtr->value << endl;
+			foo << currPtr->value;
+			currPtr = currPtr->next;
+		}
+	}
+	return foo;
+}
+template <class T>
+std::ostream& operator<< (std::ostream &foo, Queue<T> *ListPtr)
 {
 	int itemCount = 0;
 	if (ListPtr->empty ()) cout << "" << endl;

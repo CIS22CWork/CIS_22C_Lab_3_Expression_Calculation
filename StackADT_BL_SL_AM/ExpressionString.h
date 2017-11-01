@@ -17,6 +17,7 @@ We are assuming that both operators and operands in input will be single charact
 #ifndef EXPRESSIONSTRING_H
 #define EXPRESSIONSTRING_H
 #include "Stack.h"
+#include "Queue.h"
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -42,10 +43,8 @@ public:
 	bool isOperator (char C);
 	int operatorWeight (std::string op);
 
-	//******************************************************
-	// operator<<        
-	//******************************************************
-	//friend std::ostream& operator<< (std::ostream &foo, ExpressionString *ObjPtr);
+	template <class T>
+	friend std::ostream& operator<< (std::ostream &foo, ExpressionString *ObjPtr);
 };
 
 #endif

@@ -51,10 +51,8 @@ void CommandLineUI::enterLoop ()
 //******************************************************
 // operator<<        
 //******************************************************
-
-/*
 std::ostream& operator<< (std::ostream &foo, ExpressionString *ObjPtr)
 {
 	foo << "hey";
 	return foo;
-}*/
+}

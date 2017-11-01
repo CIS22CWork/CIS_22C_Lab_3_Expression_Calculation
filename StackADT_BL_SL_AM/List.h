@@ -51,9 +51,6 @@ public:
 	Node<T>* getTail ();
 	void copy (List<T> *target);
 
-	//******************************************************
-	// operator<<        
-	//******************************************************
 	template <class T>
 	friend std::ostream& operator<< (std::ostream &foo, List<T> *ListPtr);
 };

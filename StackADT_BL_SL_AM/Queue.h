@@ -2,87 +2,84 @@
 Branden Lee, Stephen Lee, and Alex Morfin
 CIS 22C
 Fall 2017
-Lab 2
+Lab 2b
 
 Used Microsoft Visual Studio 2017
 
-Stack
-A Stack ADT derived from a singly linked list which will implement
-the most common Stack operations like push, pop, isempty etc.
-and only expose them.
+Queue Class
+queues are a type of container adaptor, 
+specifically designed to operate in a FIFO context (first-in first-out), 
+where elements are inserted into one end of the container and extracted from the other.
 */
 
-#ifndef STACK_H
-#define STACK_H
+#ifndef QUEUE_H
+#define QUEUE_H
 #include "List.h"
 
 template <class T>
-class Stack : protected List<T>
+class Queue : protected List<T>
 {
 public:
-	Stack ();
-	~Stack ();
-	bool pop ();
-	bool push (T newEntry);
+	Queue ();
+	~Queue ();
 	bool empty ();
 	int size ();
+	bool pop ();
+	bool push (T val);
 	void clear ();
-	T top ();
-	void copy (Stack<T> *target);
+	T front ();
+	T back ();
 
 	template <class T>
-	friend std::ostream& operator<< (std::ostream &foo, Stack<T> *ListPtr);
+	friend std::ostream& operator<< (std::ostream &foo, Queue<T> *ListPtr);
 };
 
 //******************************************************
 // Default Constructor        
 //******************************************************
 template <class T>
-Stack<T>::Stack () { List (); }
-
-//******************************************************
-// Copy Constructor argument can't be template
-//******************************************************
+Queue<T>::Queue () { List::List (); }
 //******************************************************
 // Destructor          
 //******************************************************
-template <class T> 
-Stack<T>::~Stack () { clear (); }
-
-//******************************************************
-// pop        
-//
-// removes the top element     
-//******************************************************
 template <class T>
-bool Stack<T>::pop ()
-{
-	return List::erase (List::size () - 1);
-}
-
-//******************************************************
-// push        
-//
-// inserts element at the top     
-//******************************************************
-template <class T>
-bool Stack<T>::push (T newEntry) { return List::push_back (newEntry); }
+Queue<T>::~Queue () { List::clear (); }
 
 //******************************************************
 // empty        
 //
-// checks whether the underlying container is empty     
+// Returns whether the queue is empty: 
+// i.e. whether its size is zero.
 //******************************************************
 template <class T>
-bool Stack<T>::empty () { return List::empty (); }
+bool Queue<T>::empty () { return List::empty (); }
 
 //******************************************************
 // size         
 //
-// returns the number of elements     
+// Returns the number of elements in the queue. 
 //******************************************************
 template <class T>
-int Stack<T>::size () { return List::size (); }
+int Queue<T>::size () { return List::size (); }
+
+//******************************************************
+// pop        
+//
+// Removes the next element in the queue, 
+// effectively reducing its size by one.   
+//******************************************************
+template <class T>
+bool Queue<T>::pop () { return List::pop_front (); }
+
+//******************************************************
+// push        
+//
+// Inserts a new element at the end of the queue, 
+// after its current last element. The content of this 
+// new element is initialized to val.
+//******************************************************
+template <class T>
+bool Queue<T>::push (T val) { return List::push_back (val); }
 
 //******************************************************
 // clear          
@@ -91,24 +88,23 @@ int Stack<T>::size () { return List::size (); }
 // and leaving the container with a size of 0.
 //******************************************************
 template <class T>
-void Stack<T>::clear () { List::clear (); }
+void Queue<T>::clear () { List::clear (); }
 
 //******************************************************
-// top        
+// front       
 //
-// accesses the top element     
+// Returns a reference to the next element in the queue.  
 //******************************************************
 template <class T>
-T Stack<T>::top () { return List::getValue (size () - 1); }
+T Queue<T>::front () { return List::getValue (List::size () - 1); }
 
 //******************************************************
-// copy        
+// back       
 //
-// pushes the target stack object elements to this stack
-// call clear() if you want an exact copy
-// this method wont make a copy if the element is an object   
+// Returns a reference to the last element in the queue. 
+// This is the "newest" element in the queue 
+// (i.e. the last element pushed into the queue). 
 //******************************************************
 template <class T>
-void Stack<T>::copy (Stack<T> *target) { List::copy (target); }
-
+T Queue<T>::back () { return List::getValue (0); }
 #endif

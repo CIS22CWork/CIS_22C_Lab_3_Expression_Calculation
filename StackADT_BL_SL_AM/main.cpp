@@ -19,6 +19,7 @@ inits different Stack classes and passes the UI for the demo
 #include <time.h>       /* time */
 
 #include "Stack.h"
+#include "Queue.h"
 #include "ExpressionString.h"
 #include "CommandLineUI.h"
 
