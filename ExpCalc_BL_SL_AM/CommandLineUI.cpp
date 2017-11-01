@@ -33,7 +33,7 @@ void CommandLineUI::enterLoop ()
 	//cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n'); // discards "bad" characters
 	while (loopActive)
 	{
-		cout << "Please enter the equation to convert to postfix and infix format and evaluate:" << endl;
+		cout << "Please enter the equation to convert to postfix from infix format and evaluate:" << endl;
 		cin.clear (); // clears failure state
 		getline (cin, equationString);
 		cout << endl;

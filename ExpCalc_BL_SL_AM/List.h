@@ -178,7 +178,10 @@ bool List<T>::insert (unsigned int position, T val)
 // list container.
 //******************************************************
 template <class T>
-T List<T>::front () { return getValue (0); }
+T List<T>::front () 
+{ 
+	return getValue (0); 
+}
 
 //******************************************************
 // back       
@@ -187,7 +190,10 @@ T List<T>::front () { return getValue (0); }
 // list container.
 //******************************************************
 template <class T>
-T List<T>::back () { return getValue (size () - 1); }
+T List<T>::back () 
+{ 
+	return getValue (size () - 1); 
+}
 
 //******************************************************
 // push_back             

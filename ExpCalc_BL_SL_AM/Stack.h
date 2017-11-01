@@ -38,7 +38,9 @@ public:
 // Default Constructor        
 //******************************************************
 template <class T>
-Stack<T>::Stack () { List (); }
+Stack<T>::Stack () { 
+	List (); 
+}
 
 //******************************************************
 // Copy Constructor argument can't be template
@@ -47,7 +49,10 @@ Stack<T>::Stack () { List (); }
 // Destructor          
 //******************************************************
 template <class T> 
-Stack<T>::~Stack () { clear (); }
+Stack<T>::~Stack () 
+{ 
+	clear (); 
+}
 
 //******************************************************
 // pop        
@@ -66,7 +71,10 @@ bool Stack<T>::pop ()
 // inserts element at the top     
 //******************************************************
 template <class T>
-bool Stack<T>::push (T newEntry) { return List::push_back (newEntry); }
+bool Stack<T>::push (T newEntry) 
+{ 
+	return List::push_back (newEntry); 
+}
 
 //******************************************************
 // empty        
@@ -74,7 +82,10 @@ bool Stack<T>::push (T newEntry) { return List::push_back (newEntry); }
 // checks whether the underlying container is empty     
 //******************************************************
 template <class T>
-bool Stack<T>::empty () { return List::empty (); }
+bool Stack<T>::empty () 
+{ 
+	return List::empty (); 
+}
 
 //******************************************************
 // size         
@@ -82,7 +93,10 @@ bool Stack<T>::empty () { return List::empty (); }
 // returns the number of elements     
 //******************************************************
 template <class T>
-int Stack<T>::size () { return List::size (); }
+int Stack<T>::size () 
+{ 
+	return List::size (); 
+}
 
 //******************************************************
 // clear          
@@ -91,7 +105,10 @@ int Stack<T>::size () { return List::size (); }
 // and leaving the container with a size of 0.
 //******************************************************
 template <class T>
-void Stack<T>::clear () { List::clear (); }
+void Stack<T>::clear () 
+{ 
+	List::clear (); 
+}
 
 //******************************************************
 // top        
@@ -99,7 +116,10 @@ void Stack<T>::clear () { List::clear (); }
 // accesses the top element     
 //******************************************************
 template <class T>
-T Stack<T>::top () { return List::getValue (size () - 1); }
+T Stack<T>::top () 
+{ 
+	return List::getValue (size () - 1); 
+}
 
 //******************************************************
 // copy        
@@ -109,6 +129,9 @@ T Stack<T>::top () { return List::getValue (size () - 1); }
 // this method wont make a copy if the element is an object   
 //******************************************************
 template <class T>
-void Stack<T>::copy (Stack<T> *target) { List::copy (target); }
+void Stack<T>::copy (Stack<T> *target) 
+{ 
+	List::copy (target); 
+}
 
 #endif

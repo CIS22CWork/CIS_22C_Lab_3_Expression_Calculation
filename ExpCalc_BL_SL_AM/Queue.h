@@ -39,12 +39,18 @@ public:
 // Default Constructor        
 //******************************************************
 template <class T>
-Queue<T>::Queue () { List::List (); }
+Queue<T>::Queue () 
+{ 
+	List::List (); 
+}
 //******************************************************
 // Destructor          
 //******************************************************
 template <class T>
-Queue<T>::~Queue () { List::clear (); }
+Queue<T>::~Queue () 
+{ 
+	List::clear (); 
+}
 
 //******************************************************
 // empty        
@@ -53,7 +59,10 @@ Queue<T>::~Queue () { List::clear (); }
 // i.e. whether its size is zero.
 //******************************************************
 template <class T>
-bool Queue<T>::empty () { return List::empty (); }
+bool Queue<T>::empty () 
+{ 
+	return List::empty (); 
+}
 
 //******************************************************
 // size         
@@ -61,7 +70,10 @@ bool Queue<T>::empty () { return List::empty (); }
 // Returns the number of elements in the queue. 
 //******************************************************
 template <class T>
-int Queue<T>::size () { return List::size (); }
+int Queue<T>::size () 
+{
+	return List::size (); 
+}
 
 //******************************************************
 // pop        
@@ -70,7 +82,10 @@ int Queue<T>::size () { return List::size (); }
 // effectively reducing its size by one.   
 //******************************************************
 template <class T>
-bool Queue<T>::pop () { return List::pop_front (); }
+bool Queue<T>::pop () 
+{ 
+	return List::pop_front (); 
+}
 
 //******************************************************
 // push        
@@ -80,7 +95,10 @@ bool Queue<T>::pop () { return List::pop_front (); }
 // new element is initialized to val.
 //******************************************************
 template <class T>
-bool Queue<T>::push (T val) { return List::push_back (val); }
+bool Queue<T>::push (T val) 
+{ 
+	return List::push_back (val); 
+}
 
 //******************************************************
 // clear          
@@ -89,7 +107,10 @@ bool Queue<T>::push (T val) { return List::push_back (val); }
 // and leaving the container with a size of 0.
 //******************************************************
 template <class T>
-void Queue<T>::clear () { List::clear (); }
+void Queue<T>::clear () 
+{ 
+	List::clear (); 
+}
 
 //******************************************************
 // front       
@@ -97,7 +118,10 @@ void Queue<T>::clear () { List::clear (); }
 // Returns a reference to the next element in the queue.  
 //******************************************************
 template <class T>
-T Queue<T>::front () { return List::getValue (List::size () - 1); }
+T Queue<T>::front () 
+{ 
+	return List::getValue (List::size () - 1); 
+}
 
 //******************************************************
 // back       
@@ -107,7 +131,10 @@ T Queue<T>::front () { return List::getValue (List::size () - 1); }
 // (i.e. the last element pushed into the queue). 
 //******************************************************
 template <class T>
-T Queue<T>::back () { return List::getValue (0); }
+T Queue<T>::back () 
+{ 
+	return List::getValue (0); 
+}
 
 /** pushes the target stack object elements to this stack
 not a true copy. this method wont make a copy if the element is an object
@@ -116,5 +143,8 @@ not a true copy. this method wont make a copy if the element is an object
 @param target Queue to copy from
 @return None */
 template <class T>
-void Queue<T>::copy (Queue<T> *target) { List::copy (target); }
+void Queue<T>::copy (Queue<T> *target) 
+{ 
+	List::copy (target); 
+}
 #endif
