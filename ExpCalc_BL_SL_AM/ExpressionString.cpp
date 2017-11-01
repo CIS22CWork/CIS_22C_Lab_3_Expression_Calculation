@@ -14,6 +14,8 @@ Infix to Postfix conversion in C++ using stack and queue.
 
 TESTED WITH THE FOLLOWING EXPRESSIONS:
 1000-(57*23/5-(69-9*(1))%2)
+-(-2--3/-1*-1)+2--3
+-3%-2(-4--3/2)/-1
 */
 #include "ExpressionString.h"
 
@@ -305,24 +307,36 @@ void ExpressionString::parse ()
 	bool operandContinue = false;
 	unsigned int i;
 	unsigned int n = (unsigned int)expressionInfix.length ();
-	for (i = 0; i < n; i++)
-	{
-		// Scanning each character from left. If character is a delimitter, move on. 
-		if (expressionInfix[i] == ' ' || expressionInfix[i] == ',') continue;
-		// If this and next character are numbers or a '.' then combine them
-		if (i + 1 < n && isNumeric (expressionInfix[i]) && isNumeric (expressionInfix[i + 1]))
+	for (i = 0; i < n; i++){
+		if (debugMode)
 		{
+			std::cout << "Parse Log: i=" << expressionInfix[i]  << " Q="<< &expressionInfixQ << std::endl;
+		}
+		// Scanning each character from left. If character is a delimitter, move on. 
+		if (expressionInfix[i] == ' ') continue;
+		// -, 2 => -2
+		if (i == 0 && i + 1 < n && expressionInfix[i] == '-' && isNumeric (expressionInfix[i + 1]))
 			operandContinue = true;
+		// 5, -, -, 2 => 5 - -2
+		if (i != 0 && i + 1 < n && isOperator (std::string (1, expressionInfix[i - 1])) && expressionInfix[i] == '-' && isNumeric (expressionInfix[i + 1]))
+			operandContinue = true;
+		// (, -, 2, ) => ( -2 )
+		if (i != 0 && i + 1 < n && expressionInfix[i] == '-' && expressionInfix[i - 1] == '(' && isNumeric (expressionInfix[i + 1]))
+			operandContinue = true;
+		// ., 2 => 0.2   3, 5 => 35
+		if (i + 1 < n && isNumeric (expressionInfix[i]) && isNumeric (expressionInfix[i + 1]))
+			operandContinue = true;
+		if (operandContinue)
+		{
+			operandContinue = false;
 			entity += expressionInfix[i];
 			continue;
 		}
-		if (operandContinue) entity += expressionInfix[i];
-		if (entity == "") entity = expressionInfix[i];
+		entity += expressionInfix[i];
 		// Print operands as they arrive.
 		expressionInfixQ.push (entity);
 		// symbol clear and step increment
 		entity = "";
-		operandContinue = false;
 	}
 	if (debugMode)
 	{
@@ -427,31 +441,40 @@ std::string ExpressionString::validate ()
 		if (expressionInfix[i] == ' ' || expressionInfix[i] == ',') continue;
 		if (expressionInfix[i] == '(')parenthesesOpen++;
 		if (expressionInfix[i] == ')')parenthesesClose++;
-		if (isOperator(std::string(1,expressionInfix[i])))operatorCount++;
+		if (isOperator (std::string (1, expressionInfix[i])))operatorCount++;
+		// +2 not allowed
+		if (i == 0 && (isOperator (std::string (1, expressionInfix[i])) && expressionInfix[i] != '-'))
+			return "Expression may not start with an operator";
+		// --2 not allowed
+		if (i == 0 && i + 1 < n && isOperator (std::string (1, expressionInfix[i])) && isOperator (std::string (1, expressionInfix[i + 1])))
+			return "Expression may not start with consecutive operators";
 		// ++, **, */, +/ not allowed. +- -- *- allowed
 		if (i + 1 < n && isOperator (std::string (1, expressionInfix[i])) && (isOperator (std::string (1, expressionInfix[i + 1])) && expressionInfix[i + 1] != '-'))
-			return "Syntax error found. two operators may not be in a series.";
+			return "Two operators may not be in a series.";
 		// +-- --- not allowed.
-		if (i + 2 < n && isOperator (std::string (1, expressionInfix[i])) && isOperator (std::string (1, expressionInfix[i+1])) && isOperator (std::string (1, expressionInfix[i+3])))
-			return "Syntax error found. three operators may not be in a series.";
-		if(i + 1 == n && isOperator (std::string (1, expressionInfix[i])))
+		if (i + 2 < n && isOperator (std::string (1, expressionInfix[i])) && isOperator (std::string (1, expressionInfix[i + 1])) && isOperator (std::string (1, expressionInfix[i + 2])))
+			return "Three operators may not be in a series.";
+		if (i + 1 == n && isOperator (std::string (1, expressionInfix[i])))
 			return "Expression may never end with an operator";
 		// (+52)+5 not allowed. (-52)+5 allowed.
 		if (i + 1 < n && expressionInfix[i] == '(' && (isOperator (std::string (1, expressionInfix[i + 1])) && expressionInfix[i + 1] != '-'))
-			return "Operator may not start a parenthesis.";
+			return "Parenthesis may not start with an operator.";
+		// (--52)+5 not allowed
+		if (i + 2 < n && expressionInfix[i] == '(' && isOperator (std::string (1, expressionInfix[i + 1])) && isOperator (std::string (1, expressionInfix[i + 2])))
+			return "Parenthesis may not start with consecutive operators.";
 		// (52+)+5 not allowed
 		if (i + 1 < n && isOperator (std::string (1, expressionInfix[i])) && expressionInfix[i + 1] == ')')
-			return "Operator may not end a parenthesis.";
+			return "Parenthesis may not end with an operator.";
 		// 52--(6) => 52--1*(6)
-		if (i + 3 < n && expressionInfix[i] == '-' && expressionInfix[i+1] == '(')
+		if (i + 3 < n && expressionInfix[i] == '-' && expressionInfix[i + 1] == '(')
 		{
-			expressionInfix.insert (i+1,"1*");
+			expressionInfix.insert (i + 1, "1*");
 			n = (unsigned int)expressionInfix.length ();
 		}
 		// 52(6) => 52*(6)
 		if (i + 3 < n && !isOperator (std::string (1, expressionInfix[i])) && expressionInfix[i + 1] == '(')
 		{
-			expressionInfix.insert (i+1, "*");
+			expressionInfix.insert (i + 1, "*");
 			n = (unsigned int)expressionInfix.length ();
 		}
 	}
@@ -459,7 +482,7 @@ std::string ExpressionString::validate ()
 	{
 		return "Parentheses mismatched";
 	}
-	if (operatorCount==0)
+	if (operatorCount == 0)
 	{
 		return "Expression must contain at least one operator";
 	}
