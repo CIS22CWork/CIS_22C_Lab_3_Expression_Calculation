@@ -50,6 +50,7 @@ public:
 	T getValue (unsigned int position);
 	Node<T>* getTail ();
 	void copy (List<T> *target);
+	void reverse (List<T> *target);
 
 	template <class T>
 	friend std::ostream& operator<< (std::ostream &foo, List<T> *ListPtr);
@@ -74,11 +75,9 @@ List<T>::~List () { clear (); }
 // Copy Constructor (May not contain template argument)
 //******************************************************
 
-//******************************************************
-// empty        
-//
-// Returns whether the list container is empty
-//******************************************************
+
+/** Sees whether this list is empty.
+@return True if the list is empty; otherwise returns false. */
 template <class T>
 bool List<T>::empty ()
 {
@@ -86,23 +85,16 @@ bool List<T>::empty ()
 	return false;
 }
 
-//******************************************************
-// size         
-//
-// Returns the number of elements in the list container.
-//******************************************************
+/** Gets the current number of entries in this list.
+@return The integer number of entries currently in the list. */
 template <class T>
 int List<T>::size () const
 {
 	return itemCount;
 }
 
-//******************************************************
-// clear          
-//
-// Removes all elements from the list container
-// and leaving the container with a size of 0.
-//******************************************************
+/** Removes all entries from this list.
+@post List contains no entries and the count of items is 0. */
 template <class T>
 void List<T>::clear ()
 {
@@ -124,14 +116,15 @@ void List<T>::clear ()
 	itemCount = 0;
 }
 
-//******************************************************
-// insert       
-//
-// The container is extended by inserting new elements 
-// before the element at the specified position.
-// This effectively increases the list size by the
-// amount of elements inserted.
-//******************************************************
+/** Inserts an entry into this list at a given position.
+@pre None.
+@post If 0 <= position <= size() and the insertion is
+successful, val is at the given position in the list,
+other entries are renumbered accordingly, and the returned
+value is true.
+@param position The list position at which to insert newEntry.
+@param val The entry to insert into the list.
+@return True if insertion is successful, or false if not. */
 template <class T>
 bool List<T>::insert (unsigned int position, T val)
 {
@@ -171,39 +164,31 @@ bool List<T>::insert (unsigned int position, T val)
 	return returnStatus;
 }
 
-//******************************************************
-// front       
-//
-// Returns a reference to the first element in the 
-// list container.
-//******************************************************
+/** get the value of the element from front of the list
+@pre None
+@post None
+@return The front value */
 template <class T>
 T List<T>::front () 
 { 
 	return getValue (0); 
 }
 
-//******************************************************
-// back       
-//
-// Returns a reference to the last element in the 
-// list container.
-//******************************************************
+/** get the value of the element from back of the list
+@pre None
+@post None
+@return The back value */
 template <class T>
 T List<T>::back () 
 { 
 	return getValue (size () - 1); 
 }
 
-//******************************************************
-// push_back             
-//
-// posts to the end of the list. If successful, newEntry 
-// is stored in the list and the count of items in the 
-// list has increased by 1.
-// param newEntry The object to be added as a new entry.
-// return True if addition was successful, or false if not.    
-//******************************************************
+/** pushes the the given element value to the back
+@pre None
+@post the entry is added to the back position in the list
+and the returned value is true.
+@return True if push is successful, or false if not. */
 template <class T>
 bool List<T>::push_back (T newEntry)
 {
@@ -211,26 +196,23 @@ bool List<T>::push_back (T newEntry)
 	return returnStatus;
 }
 
-//******************************************************
-// push_front           
-//
-// Prepends the given element value to the beginning of 
-// the container.  
-// return: true on success, false on fail
-//******************************************************
+/** Prepends the given element value to the front
+@pre None
+@post the entry is added to the front position in the list
+and the returned value is true.
+@return True if push is successful, or false if not. */
 template <class T>
-bool List<T>::push_front (T newEntry)
+bool List<T>::push_front (T val)
 {
-	bool returnStatus = insert (0, newEntry);
+	bool returnStatus = insert (0, val);
 	return returnStatus;
 }
 
-//******************************************************
-// pop_front          
-//
-// Removes the first element of the container.
-// return: true on success, false on fail
-//******************************************************
+/** Removes the entry at the front of the list
+@pre List is non-empty or returns false
+@post the entry at the front position in the list is removed, other
+items are renumbered accordingly, and the returned value is true.
+@return True if removal is successful, or false if not. */
 template <class T>
 bool List<T>::pop_front ()
 {
@@ -238,12 +220,11 @@ bool List<T>::pop_front ()
 	return returnStatus;
 }
 
-//******************************************************
-// pop_back         
-//
-// Removes the first element of the container.
-// return: true on success, false on fail
-//******************************************************
+/** Removes the entry at the back of the list
+@pre List is non-empty or returns false
+@post the entry at the back position in the list is removed, other
+items are renumbered accordingly, and the returned value is true.
+@return True if removal is successful, or false if not. */
 template <class T>
 bool List<T>::pop_back ()
 {
@@ -251,14 +232,13 @@ bool List<T>::pop_back ()
 	return returnStatus;
 }
 
-//******************************************************
-// erase          
-//
-// removes an entry at the defined index
-// index 0=tail, SIZE-1=head 
-// list count decremented by 1 if successful.
-// returns true if addition was successful, or false if not.    
-//******************************************************
+/** Removes the entry at a given position from this list.
+@pre None.
+@post If 0 <= position <= size() and the removal is successful,
+the entry at the given position in the list is removed, other
+items are renumbered accordingly, and the returned value is true.
+@param position The list position of the entry to remove.
+@return True if removal is successful, or false if not. */
 template <class T>
 bool List<T>::erase (unsigned int position)
 {
@@ -296,15 +276,16 @@ bool List<T>::erase (unsigned int position)
 	}
 	return returnStatus;
 }
-//******************************************************
-// remove         
-//
-// removes all entries with the same value
-// list count decremented by entries removed if successful.
-// returns true if removal was successful, or false if not.    
-//******************************************************
+
+/** Removes the entry matching val from this list.
+@pre None.
+@post If val exists and the removal is successful,
+the entry matching the val in the list is removed, other
+items are renumbered accordingly, and the returned value is true.
+@param val The value of the entry to remove.
+@return True if removal is successful, or false if not. */
 template <class T>
-bool List<T>::remove (T anEntry)
+bool List<T>::remove (T val)
 {
 	Node<T> *currentNode;
 	Node<T> *prevNode;
@@ -313,7 +294,7 @@ bool List<T>::remove (T anEntry)
 	prevNode = currentNode;
 	bool returnStatus = true;
 
-	if (currentNode->value == anEntry)
+	if (currentNode->value == val)
 	{
 		currentNode = currentNode->next;
 		delete tail;
@@ -322,13 +303,13 @@ bool List<T>::remove (T anEntry)
 	else
 	{
 
-		while (currentNode != nullptr && currentNode->value != anEntry)
+		while (currentNode != nullptr && currentNode->value != val)
 		{
 			prevNode = currentNode;
 			currentNode = currentNode->next;
 		}
 
-		if (currentNode->value == anEntry && head->value == anEntry)
+		if (currentNode->value == val && head->value == val)
 		{
 			prevNode->next = currentNode->next;
 			//delete currentNode;
@@ -336,7 +317,7 @@ bool List<T>::remove (T anEntry)
 			head = prevNode;
 
 		}
-		else if (currentNode->value == anEntry)
+		else if (currentNode->value == val)
 		{
 			prevNode->next = currentNode->next;
 			delete currentNode;
@@ -348,30 +329,30 @@ bool List<T>::remove (T anEntry)
 	}
 	return returnStatus;
 }
-//******************************************************
-// find         
-//
-// Tests whether this list contains a given entry.
-// param anEntry  The entry to locate.
-// return  True if list contains anEntry, or false otherwise.
-//******************************************************
+
+/** Tests whether this list contains a given value
+@pre None.
+@post None
+@param val The value of the entry to find.
+@return True if list contains val, or false otherwise. */
 template <class T>
-bool List<T>::find (T anEntry)
+bool List<T>::find (T val)
 {
 	Node<T> *currentNode;
 	currentNode = tail;
 	while (currentNode)
 	{
-		if (currentNode->value == anEntry) return true;
+		if (currentNode->value == val) return true;
 		else currentNode = currentNode->next;
 	}
 	return false;
 }
-//******************************************************
-// getValue           
-//
-// returns the value of the list node index.
-//******************************************************
+
+/** Gets the entry at the given position in this list.
+@pre 0 <= position < size().
+@post The desired entry has been returned.
+@param position The list position of the desired entry.
+@return The entry at the given position. */
 template <class T>
 T List<T>::getValue (unsigned int position)
 {
@@ -392,28 +373,37 @@ T List<T>::getValue (unsigned int position)
 	return returnValue;
 }
 
-//******************************************************
-// getTail        
-//
-// returns tail node
-//******************************************************
+/** Gets the tail node
+@pre None
+@post None
+@return The tail node. */
 template <class T>
 Node<T>* List<T>::getTail ()
 {
 	return tail;
 }
 
-//******************************************************
-// copy       
-//
-// pushes the target list object elements to this list
-// call clear() if you want an exact copy
-// this method wont make a copy if the element is an object
-//******************************************************
+/** pushes the target stack object elements to this stack
+@pre None
+@post Queue has target's elements pushed on
+@param target Queue to push from
+@return None */
 template <class T>
 void List<T>::copy (List<T> *target)
 {
 	unsigned int n = target->size ();
 	for (unsigned int i = 0; i < n; i++) push_back (target->getValue (i));
+}
+
+/** pushes the target stack object elements to this stack in reverse
+@pre None
+@post Queue has target's elements pushed on
+@param target Queue to reverse from
+@return None */
+template <class T>
+void List<T>::reverse (List<T> *target)
+{
+	unsigned int n = target->size ();
+	for (unsigned int i = n; i > 0; i--) push_back (target->getValue (i-1));
 }
 #endif

@@ -10,7 +10,7 @@ IF LIBRARYS ARE NOT FOUND, THEN SWITCH SDK VERSION
 OR INSTALL THIS SDK VERSION
 
 ExpressionString
-Infix to Postfix conversion in C++ using stack and queue.
+Infix to Postfix and Infix to Prefix conversion in using stack and queue.
 
 TESTED WITH THE FOLLOWING EXPRESSIONS:
 1000-(57*23/5-(69-9*(1))%2)
@@ -44,21 +44,21 @@ ExpressionString::~ExpressionString ()
 
 }
 
-//******************************************************
-// ExpressionString::IsNumeric      
-//
-// returns true if character is numeric and false if not
-//******************************************************
+/** set the infix expression
+@pre None
+@post None
+@param expression the infix expression
+@return None */
 void ExpressionString::setExpression (std::string expression)
 {
 	expressionInfix = expression;
 }
 
-//******************************************************
-// ExpressionString::IsNumeric      
-//
-// returns true if character is numeric and false if not
-//******************************************************
+/** set the debug status.
+@pre None
+@post None
+@param flag is true to enable debug messages and false for production
+@return None */
 void ExpressionString::setDebug (bool flag)
 {
 	debugMode = flag;
@@ -86,11 +86,11 @@ std::string ExpressionString::getPrefix ()
 	return queueOutput.str ();
 }
 
-//******************************************************
-// ExpressionString::IsNumeric      
-//
-// returns true if character is numeric and false if not
-//******************************************************
+/** get the evaluated expression double
+@pre call evaluate() first
+@post None
+@param None
+@return expressionEval */
 double ExpressionString::getEval ()
 {
 	return expressionEval;
@@ -119,7 +119,7 @@ std::string ExpressionString::infixToPostfix ()
 	for (i = 0; i < n; i++)
 	{
 		// Instructions from http://csis.pace.edu/~wolf/CS122/infix-postfix.htm
-		entity = infixQ.back ();
+		entity = infixQ.front ();
 		infixQ.pop ();
 		// Print operands as they arrive.
 		if (isOperand (entity)) expressionPostQ.push (entity);
@@ -205,7 +205,8 @@ std::string ExpressionString::infixToPrefix ()
 {
 	expressionPreQ.clear ();
 	Queue<std::string> infixQ;
-	infixQ.copy (&expressionInfixQ);
+	Queue<std::string> prefixQ;
+	infixQ.reverse (&expressionInfixQ);
 	Stack<std::string> S;
 	std::string entity = "";
 	bool pushed;
@@ -218,60 +219,33 @@ std::string ExpressionString::infixToPrefix ()
 		std::cout << std::setw (5) << std::left << "step" << std::setw (7) << "symbol" << std::setw (12) << "stack" << std::setw (8) << "postfix" << std::endl;
 	for (i = 0; i < n; i++)
 	{
-		// Instructions from http://csis.pace.edu/~wolf/CS122/infix-postfix.htm
-		entity = infixQ.back ();
+		entity = infixQ.front ();
 		infixQ.pop ();
 		// Print operands as they arrive.
-		if (isOperand (entity)) expressionPreQ.push (entity);
-		// 	If the stack is empty or contains a left parenthesis on top, push the incoming operator onto the stack.
-		else if (isOperator (entity) && (S.empty () || S.top () == "(")) S.push (entity);
-		// 	If the incoming symbol is a left parenthesis, push it on the stack.
-		else if (entity == "(") S.push (entity);
-		// 	If the incoming symbol is a right parenthesis, pop the stack and print the operators until you see a left parenthesis. Discard the pair of parentheses.
-		else if (entity == ")")
+		if (isOperand (entity)) prefixQ.push (entity);
+		else if (entity == ")") S.push (entity);
+		else if (entity == "(")
 		{
-			while (!S.empty () && S.top () != "(")
+			while (!S.empty () && S.top () != ")")
 			{
-				expressionPreQ.push (S.top ());
+				prefixQ.push (S.top ());
 				S.pop ();
 			}
 			S.pop ();
 		}
 		else
 		{
-			pushed = false;
-			if (!S.empty ())
+			if (operatorWeight (entity) > operatorWeight (S.top ()))
 			{
-				while (!pushed)
-				{
-					// If the incoming symbol has higher precedence than the top of the stack, push it on the stack.
-					if (operatorWeight (S.top ()) < operatorWeight (entity))
-					{
-						S.push (entity);
-						pushed = true;
-					}
-					// If the incoming symbol has equal precedence with the top of the stack, use association. 
-					// If the association is left to right, pop and print the top of the stack and then push the incoming operator. 
-					// If the association is right to left, push the incoming operator.
-					else if (operatorWeight (S.top ()) == operatorWeight (entity))
-					{
-						expressionPreQ.push (S.top ());
-						S.pop ();
-						S.push (entity);
-						pushed = true;
-					}
-					// If the incoming symbol has lower precedence than the symbol on the top of the stack, 
-					// pop the stack and print the top operator. 
-					// Then test the incoming operator against the new top of stack.
-					else if (!S.empty () && operatorWeight (S.top ()) > operatorWeight (entity))
-					{
-						expressionPreQ.push (S.top ());
-						S.pop ();
-					}
-				}
+				S.push (entity);
 			}
 			else
 			{
+				while (operatorWeight (entity) <= operatorWeight (S.top ()))
+				{
+					prefixQ.push (S.top ());
+					S.pop ();
+				}
 				S.push (entity);
 			}
 		}
@@ -279,7 +253,7 @@ std::string ExpressionString::infixToPrefix ()
 		if (debugMode)
 		{
 			stackOutput << &S;
-			queueOutput << &expressionPreQ;
+			queueOutput << &prefixQ;
 			std::cout << std::setw (5) << std::left << i + 1 << std::setw (7) << entity << std::setw (12) << stackOutput.str () << queueOutput.str () << std::endl;
 			stackOutput.str ("");
 			queueOutput.str ("");
@@ -289,10 +263,11 @@ std::string ExpressionString::infixToPrefix ()
 	// (No parentheses should remain.)
 	while (!S.empty ())
 	{
-		expressionPreQ.push (S.top ());
+		prefixQ.push (S.top ());
 		S.pop ();
 	}
-	return getPostfix ();
+	expressionPreQ.reverse(&prefixQ);
+	return getPrefix ();
 }
 
 /** converts expressionInfix string to expressionInfixQ Queue
@@ -367,7 +342,7 @@ void ExpressionString::evaluate ()
 	}
 	for (i = 0; i < n; i++)
 	{
-		entity = postQ.back ();
+		entity = postQ.front ();
 		if (isOperand (entity))
 		{
 			// we saw an operand, push the number onto stack

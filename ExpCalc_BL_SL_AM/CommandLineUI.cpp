@@ -43,8 +43,8 @@ void CommandLineUI::enterLoop ()
 			ExpressionStringObj->parse ();
 			ExpressionStringObj->infixToPostfix ();
 			cout << "Postfix: " << ExpressionStringObj->getPostfix () << endl;
-			//ExpressionStringObj->infixToPrefix ();
-			//cout << "Prefix: " << ExpressionStringObj->getPrefix () << endl;
+			ExpressionStringObj->infixToPrefix ();
+			cout << "Prefix: " << ExpressionStringObj->getPrefix () << endl;
 			ExpressionStringObj->evaluate ();
 			cout << "Evaluation: " << ExpressionStringObj->getEval () << endl << endl;
 		}
@@ -54,13 +54,6 @@ void CommandLineUI::enterLoop ()
 		}
 	}
 }
-
-//******************************************************
-// CommandLineUI::intStackPush   
-//      
-// This is an example of the Stack push method
-//******************************************************
-//something
 
 //******************************************************
 // operator<<        

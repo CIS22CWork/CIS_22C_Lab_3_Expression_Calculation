@@ -30,6 +30,7 @@ public:
 	T front ();
 	T back ();
 	void copy (Queue<T> *target);
+	void reverse (Queue<T> *target);
 
 	template <class T>
 	friend std::ostream& operator<< (std::ostream &foo, Queue<T> *ListPtr);
@@ -52,88 +53,70 @@ Queue<T>::~Queue ()
 	List::clear (); 
 }
 
-//******************************************************
-// empty        
-//
-// Returns whether the queue is empty: 
-// i.e. whether its size is zero.
-//******************************************************
+/** Sees whether this list is empty.
+@return True if the list is empty; otherwise returns false. */
 template <class T>
 bool Queue<T>::empty () 
 { 
 	return List::empty (); 
 }
 
-//******************************************************
-// size         
-//
-// Returns the number of elements in the queue. 
-//******************************************************
+/** Gets the current number of entries in this list.
+@return The integer number of entries currently in the list. */
 template <class T>
 int Queue<T>::size () 
 {
 	return List::size (); 
 }
 
-//******************************************************
-// pop        
-//
-// Removes the next element in the queue, 
-// effectively reducing its size by one.   
-//******************************************************
+/** Removes the entry at the front of the list
+@pre List is non-empty or returns false
+@post the entry at the front position in the list is removed, other
+items are renumbered accordingly, and the returned value is true.
+@return True if removal is successful, or false if not. */
 template <class T>
 bool Queue<T>::pop () 
 { 
 	return List::pop_front (); 
 }
 
-//******************************************************
-// push        
-//
-// Inserts a new element at the end of the queue, 
-// after its current last element. The content of this 
-// new element is initialized to val.
-//******************************************************
+/** pushes the the given element value to the back
+@pre None
+@post the entry is added to the back position in the list
+and the returned value is true.
+@return True if push is successful, or false if not. */
 template <class T>
 bool Queue<T>::push (T val) 
 { 
 	return List::push_back (val); 
 }
 
-//******************************************************
-// clear          
-//
-// Removes all elements from the list container
-// and leaving the container with a size of 0.
-//******************************************************
+/** Removes all entries from this list.
+@post List contains no entries and the count of items is 0. */
 template <class T>
 void Queue<T>::clear () 
 { 
 	List::clear (); 
 }
 
-//******************************************************
-// front       
-//
-// Returns a reference to the next element in the queue.  
-//******************************************************
+/** get the value of the element from front of the list
+@pre None
+@post None
+@return The front value */
 template <class T>
 T Queue<T>::front () 
 { 
-	return List::getValue (List::size () - 1); 
+	return List::front ();
 }
 
-//******************************************************
-// back       
-//
-// Returns a reference to the last element in the queue. 
-// This is the "newest" element in the queue 
-// (i.e. the last element pushed into the queue). 
-//******************************************************
+/** get the value of the element from back of the list
+@pre None
+@post None
+@return The back value */
 template <class T>
 T Queue<T>::back () 
 { 
-	return List::getValue (0); 
+	return List::back ();
 }
 
 /** pushes the target stack object elements to this stack
@@ -146,5 +129,16 @@ template <class T>
 void Queue<T>::copy (Queue<T> *target) 
 { 
 	List::copy (target); 
+}
+
+/** pushes the target stack object elements to this stack in reverse
+@pre None
+@post Queue has target's elements pushed on
+@param target Queue to reverse from
+@return None */
+template <class T>
+void Queue<T>::reverse (Queue<T> *target)
+{
+	List::reverse (target);
 }
 #endif

@@ -54,80 +54,67 @@ Stack<T>::~Stack ()
 	clear (); 
 }
 
-//******************************************************
-// pop        
-//
-// removes the top element     
-//******************************************************
+/** Removes the entry at the back of the list
+@pre List is non-empty or returns false
+@post the entry at the back position in the list is removed, other
+items are renumbered accordingly, and the returned value is true.
+@return True if removal is successful, or false if not. */
 template <class T>
 bool Stack<T>::pop ()
 {
-	return List::erase (List::size () - 1);
+	return List::pop_back();
 }
 
-//******************************************************
-// push        
-//
-// inserts element at the top     
-//******************************************************
+/** pushes the the given element value to the back
+@pre None
+@post the entry is added to the back position in the list
+and the returned value is true.
+@return True if push is successful, or false if not. */
 template <class T>
 bool Stack<T>::push (T newEntry) 
 { 
 	return List::push_back (newEntry); 
 }
 
-//******************************************************
-// empty        
-//
-// checks whether the underlying container is empty     
-//******************************************************
+/** Sees whether this list is empty.
+@return True if the list is empty; otherwise returns false. */
 template <class T>
 bool Stack<T>::empty () 
 { 
 	return List::empty (); 
 }
 
-//******************************************************
-// size         
-//
-// returns the number of elements     
-//******************************************************
+/** Gets the current number of entries in this list.
+@return The integer number of entries currently in the list. */
 template <class T>
 int Stack<T>::size () 
 { 
 	return List::size (); 
 }
 
-//******************************************************
-// clear          
-//
-// Removes all elements from the list container
-// and leaving the container with a size of 0.
-//******************************************************
+/** Removes all entries from this list.
+@post List contains no entries and the count of items is 0. */
 template <class T>
 void Stack<T>::clear () 
 { 
 	List::clear (); 
 }
 
-//******************************************************
-// top        
-//
-// accesses the top element     
-//******************************************************
+/** get the value of the element from top of the list
+@pre None
+@post None
+@return The top value */
 template <class T>
 T Stack<T>::top () 
 { 
 	return List::getValue (size () - 1); 
 }
 
-//******************************************************
-// copy        
-//
-// pushes the target stack object elements to this stack
-// call clear() if you want an exact copy
-// this method wont make a copy if the element is an object   
-//******************************************************
+/** pushes the target stack object elements to this stack
+@pre None
+@post Queue has target's elements pushed on
+@param target Queue to push from
+@return None */
 template <class T>
 void Stack<T>::copy (Stack<T> *target) 
 { 
